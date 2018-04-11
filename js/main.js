@@ -21,10 +21,9 @@ class Fetch {
         
         fetchSingleJobPost.then((response) => {
             return response.json();
-        }).then((fetchSingleJobPost) => { 
-            var myWindow = window.open("");
-            myWindow.document.write("<p>This is 'MsgWindow'. I am 200px wide and")
-            console.log(fetchSingleJobPost);
+        }).then((fetchSingleJobPost) => {
+           location.replace(`http://localhost:8888/Arbetsmetoder/arbetsformedlingen/platsbanken/single_job_post.html?id=${jobId}`);
+        
         }).catch((error) =>{     
             console.log(error);
        })

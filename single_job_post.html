@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   
+   
+    
+    <script>
+        var url = new URL(window.location.href);
+        var id = url.searchParams.get("id");
+        console.log(id);
+        
+        function fetchSingleJobPostById(jobId){
+        
+            const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
+
+            fetchSingleJobPost.then((response) => {
+                return response.json();
+            }).then((fetchSingleJobPost) => {
+                console.log(fetchSingleJobPost)
+
+            }).catch((error) =>{     
+                console.log(error);
+           })
+
+        }
+        
+        fetchSingleJobPostById(id)
+    </script>
+    
+</body>
+</html>
