@@ -31,13 +31,21 @@ function displayLatestJobs(jobs){
     
     for(let i = 0; i < jobListing.length; i++){
         
+        const date = jobListing[i].sista_ansokningsdag
+        let formatedDate = ""
+        if(date){
+            formatedDate = date.substring(0,10);
+        } else {
+            formatedDate = "Oklart";
+        }
+        
         listedJobs +=`
             <div class="latestJobs">
                 <h3>${jobListing[i].annonsrubrik}</h3>
                 <p><span>${jobListing[i].yrkesbenamning}</span> - ${jobListing[i].kommunnamn}</p>
                 <p>${jobListing[i].arbetsplatsnamn}</p>
                 <p>${jobListing[i].anstallningstyp}</p>
-                <p>${jobListing[i].sista_ansokningsdag}</p>
+                <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
                 <button id="${jobListing[i].annonsid}"=>Läs mer!</button>
             </div>
         `;
