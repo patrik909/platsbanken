@@ -14,22 +14,25 @@ function listJobsByLanID(ID){
 }
 
 function listJobs(jobs){
+    
     console.log(jobs.matchningslista)
     
     const jobListing = jobs.matchningslista.matchningdata
-    
     let listedJobs = "";
     
     for(let i = 0; i < jobListing.length; i++){
         
         listedJobs +=`
             <div class="latestJobs">
-                <header>${jobListing[i].annonsrubrik}</header>
-                <button id="">Läs mer!</button>
+                <h3>${jobListing[i].annonsrubrik}</h3>
+                <p><span>${jobListing[i].yrkesbenamning}</span> - ${jobListing[i].kommunnamn}</p>
+                <p>${jobListing[i].arbetsplatsnamn}</p>
+                <p>${jobListing[i].anstallningstyp}</p>
+                <p>${jobListing[i].sista_ansokningsdag}</p>
+                <button id="${jobListing[i].annonsid}"=>Läs mer!</button>
             </div>
-        `
-        console.log(jobListing[i])
-        console.log(jobListing[i].annonsrubrik)
+        `;
+    
     }
     
     const main = document.getElementById('outputListJobs');

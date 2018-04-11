@@ -1,0 +1,23 @@
+html{
+    font-family: 'helvetica';
+    font-size: 14px;
+}
+
+h1{
+    text-align: center;
+}
+
+.latestJobs{
+    background: #99c7d8;
+    padding: 30px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.latestJobs h3{
+    font-size: 1.6em;
+}
+
+.latestJobs p span{
+    font-weight: 600;
+}
