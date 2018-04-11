@@ -7,15 +7,24 @@ function listJobsByLanID(ID){
     fetchData.then((response) => {
         return response.json();
     }).then((fetchData) => {
-        listJobs(fetchData);
+        displayLatestJobs(fetchData);
+        displayAmountOfJobs(fetchData)
     }).catch((error) =>{
         console.log(error);
     })
 }
 
-function listJobs(jobs){
+function displayAmountOfJobs(jobs){
     
-    console.log(jobs.matchningslista)
+    const amountOfJobsDiv = document.getElementById('amountOfJobs');
+
+    let amountOfJobsContent = `<p> Antal jobb i ${jobs.matchningslista.matchningdata[0].kommunnamn}:  ${jobs.matchningslista.antal_platsannonser_exakta}`
+    
+    amountOfJobsDiv.innerHTML=amountOfJobsContent;
+
+}
+
+function displayLatestJobs(jobs){
     
     const jobListing = jobs.matchningslista.matchningdata
     let listedJobs = "";
@@ -35,8 +44,7 @@ function listJobs(jobs){
     
     }
     
-    const main = document.getElementById('outputListJobs');
-
-    main.innerHTML=listedJobs
+    const outputListJobs = document.getElementById('outputListJobs');
+    outputListJobs.innerHTML=listedJobs
     
 }
