@@ -22,8 +22,8 @@ class Fetch {
         fetchSingleJobPost.then((response) => {
             return response.json();
         }).then((fetchSingleJobPost) => {
-           location.replace(`http://localhost:8888/Arbetsmetoder/arbetsformedlingen/platsbanken/single_job_post.html?id=${jobId}`);
-        
+            let url = new URL(window.location.href);
+            location.replace(`${url}single_job_post.html?id=${jobId}`);
         }).catch((error) =>{     
             console.log(error);
        })
