@@ -15,6 +15,22 @@ class Fetch {
         
     }
     
+    fetchSingleJobPostById(jobId){
+        
+        const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
+        
+        fetchSingleJobPost.then((response) => {
+            return response.json();
+        }).then((fetchSingleJobPost) => { 
+            var myWindow = window.open("");
+            myWindow.document.write("<p>This is 'MsgWindow'. I am 200px wide and")
+            console.log(fetchSingleJobPost);
+        }).catch((error) =>{     
+            console.log(error);
+       })
+        
+    }
+    
 }
 
 class DOM {
@@ -40,8 +56,7 @@ class DOM {
         let listedJobs = "";
         
         for(let i = 0; i < jobData.length; i++){
-            
-            const date = jobData[i].sista_ansokningsdag
+           const date = jobData[i].sista_ansokningsdag
             //Sending info to the contructor, which formates the data.
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
             
@@ -52,18 +67,25 @@ class DOM {
                 formatedDate = "Oklart";
             }
             
-            listedJobs +=`
-                <div class="latestJobs">
-                    <h3>${jobData[i].annonsrubrik}</h3>
-                    <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
-                    <p>${jobData[i].arbetsplatsnamn}</p>
-                    <p>${jobData[i].anstallningstyp}</p>
-                    <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
-                    <button id="${jobData[i].annonsid}"=>Läs mer!</button>
-                </div>
+            const latestJob = document.createElement('div');
+            latestJob.classList.add('latestJobs');
+            latestJob.innerHTML = `
+                <h3>${jobData[i].annonsrubrik}</h3>
+                <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
+                <p>${jobData[i].arbetsplatsnamn}</p>
+                <p>${jobData[i].anstallningstyp}</p>
+                <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
+                <button id="${jobData[i].annonsid}">Läs mer!</button>
             `;
+            
+            outputListJobs.appendChild(latestJob);
+            
+            let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
+            readMoreButton.addEventListener('click', function(){
+                newFetch.fetchSingleJobPostById(jobData[i].annonsid);
+            });
         }
-        outputListJobs.innerHTML=listedJobs
+        
     }
     
     formateDate(date){
@@ -71,6 +93,8 @@ class DOM {
     }
        
 }
+
+
 
 //Starts fetch when entering the homepage
 const newDOM = new DOM;
