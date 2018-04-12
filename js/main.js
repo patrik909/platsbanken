@@ -1,24 +1,48 @@
-//function main(townId, DOMobject) {
-//    const newFetch = new Fetch;
-//    newFetch.fetchLatestJobsByID(townId, DOMobject);
-//}
+function changeUrl(url, substringToDelete){
 
-function main(townId) {
-    const newFetch = new Fetch;
-    newFetch.fetchLatestJobsByID(townId, new DOM);
+    let substringLength = substringToDelete.length;
+    
+    if(url.href.substr(-substringLength) == substringToDelete){
+        newUrl = url.href.slice(0, -substringToDelete);     
+    }
+
+    return newUrl;
 }
 
+
 class Fetch {
-    
-    fetchLatestJobsByID(ID, obj){
-        let newDOM = obj;
+
+    fetchLatestJobsByID(ID){
+        
         const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=10&lanid=${ID}`);
         
         fetchLatestJobs.then((response) => {
             return response.json();
         }).then((fetchLatestJobs) => { 
-            newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);   //talked to strangers (check Demeter law)
-            newDOM.displayLatestJobs(fetchLatestJobs);         //against single responsibility law - not only fetches but also shows ??
+            newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
+            newDOM.displayLatestJobs(fetchLatestJobs);
+        }).catch((error) =>{     
+            console.log(error);
+       })
+        
+    }
+    
+    
+    fetchSingleJobPostById(jobId){
+          
+        const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
+        
+        fetchSingleJobPost.then((response) => {
+            return response.json();
+        }).then((fetchSingleJobPost) => {
+           
+            let oldUrl = new URL(window.location.href);
+            let stringInUrlToDelete ='index.html';
+            let url = changeUrl(oldUrl, stringInUrlToDelete);     
+
+            location.assign(`${url}single_job_post.html?id=${jobId}`);
+            
+            
         }).catch((error) =>{     
             console.log(error);
        })
@@ -27,21 +51,19 @@ class Fetch {
     
 }
 
-
-
 class DOM {
     
     displayTotalAmoutOfJobs(jobs){
 
-        const amountOfJobsDiv = document.getElementById('amountOfJobs'); //create element with such id and append?
+        const amountOfJobsDiv = document.getElementById('amountOfJobs');
         const lan = jobs.matchningslista.matchningdata[0].lan;
         const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
         
         const amountOfJobsContent = `
-            <p> Antal jobb i ${lan}: ${amountOfJobs}   
-        `; //appendChild instead of markup
+            <p> Antal jobb i ${lan}: ${amountOfJobs}
+        `;
         
-        amountOfJobsDiv.innerHTML=amountOfJobsContent;  //create textNode instead of innerHTML?
+        amountOfJobsDiv.innerHTML=amountOfJobsContent;
         
     }
     
@@ -52,8 +74,7 @@ class DOM {
         let listedJobs = "";
         
         for(let i = 0; i < jobData.length; i++){
-            
-            const date = jobData[i].sista_ansokningsdag
+           const date = jobData[i].sista_ansokningsdag
             //Sending info to the contructor, which formates the data.
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
             
@@ -64,30 +85,36 @@ class DOM {
                 formatedDate = "Oklart";
             }
             
-            listedJobs +=`
-                <div class="latestJobs">
-                    <h3>${jobData[i].annonsrubrik}</h3>
-                    <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
-                    <p>${jobData[i].arbetsplatsnamn}</p>
-                    <p>${jobData[i].anstallningstyp}</p>
-                    <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
-                    <button id="${jobData[i].annonsid}"=>Läs mer!</button>
-                </div>
-            `; //appendChild instead of markup?
+            const latestJob = document.createElement('div');
+            latestJob.classList.add('latestJobs');
+            latestJob.innerHTML = `
+                <h3>${jobData[i].annonsrubrik}</h3>
+                <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
+                <p>${jobData[i].arbetsplatsnamn}</p>
+                <p>${jobData[i].anstallningstyp}</p>
+                <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
+                <button id="${jobData[i].annonsid}">Läs mer!</button>
+            `;
+            
+            outputListJobs.appendChild(latestJob);
+            
+            let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
+            readMoreButton.addEventListener('click', function(){
+                newFetch.fetchSingleJobPostById(jobData[i].annonsid);
+            });
         }
-        outputListJobs.innerHTML=listedJobs
+        
     }
     
     formateDate(date){
         console.log(date)
-    }  //console log bara för testing
+    }
        
 }
 
-//Starts fetch when entering the homepage
-//const newDOM = new DOM;
-//const newFetch = new Fetch;
-//newFetch.fetchLatestJobsByID(1, new DOM);
 
-//main(1, new DOM);
-main(1);
+
+//Starts fetch when entering the homepage
+const newDOM = new DOM;
+const newFetch = new Fetch;
+newFetch.fetchLatestJobsByID(1);
