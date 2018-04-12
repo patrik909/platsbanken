@@ -23,7 +23,14 @@ class Fetch {
             return response.json();
         }).then((fetchSingleJobPost) => {
             let url = new URL(window.location.href);
-            location.replace(`${url}single_job_post.html?id=${jobId}`);
+            
+            if(url.href.substr(-10) == 'index.html'){
+                url = url.href.slice(0, -10);
+                location.replace(`${url}single_job_post.html?id=${jobId}`);
+            }else{
+                location.replace(`${url}single_job_post.html?id=${jobId}`);
+            }
+            
         }).catch((error) =>{     
             console.log(error);
        })
