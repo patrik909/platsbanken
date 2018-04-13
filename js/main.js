@@ -1,7 +1,8 @@
 function changeUrl(url, substringToDelete){
 
     let substringLength = substringToDelete.length;
-    
+    let newUrl = '';  
+  
     if(url.href.substr(-substringLength) == substringToDelete){
         newUrl = url.href.slice(0, -substringToDelete);     
     }
@@ -26,10 +27,9 @@ class Fetch {
        })
         
     }
-    
-    
+
     fetchSingleJobPostById(jobId){
-          
+        
         const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
         
         fetchSingleJobPost.then((response) => {
@@ -41,7 +41,6 @@ class Fetch {
             let url = changeUrl(oldUrl, stringInUrlToDelete);     
 
             location.assign(`${url}single_job_post.html?id=${jobId}`);
-            
             
         }).catch((error) =>{     
             console.log(error);
