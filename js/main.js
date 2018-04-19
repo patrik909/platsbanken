@@ -1,5 +1,18 @@
+function changeUrl(url, substringToDelete){
+
+    let substringLength = substringToDelete.length;
+    let newUrl = '';  
+  
+    if(url.href.substr(-substringLength) == substringToDelete){
+        newUrl = url.href.slice(0, -substringToDelete);     
+    }
+
+    return newUrl;
+}
+
+
 class Fetch {
-    
+
     fetchLatestJobsByID(ID){
         
         const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=10&lanid=${ID}`);
@@ -9,6 +22,26 @@ class Fetch {
         }).then((fetchLatestJobs) => { 
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
             newDOM.displayLatestJobs(fetchLatestJobs);
+        }).catch((error) =>{     
+            console.log(error);
+       })
+        
+    }
+
+    fetchSingleJobPostById(jobId){
+        
+        const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
+        
+        fetchSingleJobPost.then((response) => {
+            return response.json();
+        }).then((fetchSingleJobPost) => {
+           
+            let oldUrl = new URL(window.location.href);
+            let stringInUrlToDelete ='index.html';
+            let url = changeUrl(oldUrl, stringInUrlToDelete);     
+
+            location.assign(`${url}single_job_post.html?id=${jobId}`);
+            
         }).catch((error) =>{     
             console.log(error);
        })
@@ -99,6 +132,8 @@ class DOM {
     }
        
 }
+
+
 
 //Starts fetch when entering the homepage
 const newDOM = new DOM;
