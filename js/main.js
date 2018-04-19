@@ -10,12 +10,19 @@ function changeUrl(url, substringToDelete){
     return newUrl;
 }
 
+const filterJobsByAmount = document.getElementById('filterJobsByAmount');
+const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
+
+filterJobsByAmountButton.addEventListener('click', function(){
+    //console.log(filterJobsByAmount.value);
+    newFetch.fetchLatestJobsByID(filterJobsByAmount.value)
+})
 
 class Fetch {
 
-    fetchLatestJobsByID(ID){
+    fetchLatestJobsByID(rows = 10, ID = 1){
         
-        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=10&lanid=${ID}`);
+        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${ID}`);
         
         fetchLatestJobs.then((response) => {
             return response.json();
@@ -116,4 +123,4 @@ class DOM {
 //Starts fetch when entering the homepage
 const newDOM = new DOM;
 const newFetch = new Fetch;
-newFetch.fetchLatestJobsByID(1);
+newFetch.fetchLatestJobsByID(10, 1);
