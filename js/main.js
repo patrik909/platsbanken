@@ -10,38 +10,42 @@ function changeUrl(url, substringToDelete){
     return newUrl;
 }
 
-const filterJobsByAmount = document.getElementById('filterJobsByAmount');
-const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
 
-const filterCountyButton = document.getElementById('filterCountyButton');
-const filterCounty = document.getElementById('filterCounty');
-
-const searchJobs = document.getElementById('searchJobs');
-const searchJobsButton = document.getElementById('searchJobsButton');
-
-const filterProfession = document.getElementById('filterProfession');
-const filterProfessionButton = document.getElementById('filterProfessionButton');
-
-
-filterJobsByAmountButton.addEventListener('click', () => {
-    newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
+class Controller {
     
-})
+    filterButton(){
+        
+        const filterJobsByAmount = document.getElementById('filterJobsByAmount');
+        const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
 
-filterCountyButton.addEventListener('click', () => {
-    newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
-})
+        const filterCountyButton = document.getElementById('filterCountyButton');
+        const filterCounty = document.getElementById('filterCounty');
 
-searchJobsButton.addEventListener('click', () => {
-    newFetch.fetchBySearch(searchJobs.value);
-})
+        const searchJobs = document.getElementById('searchJobs');
+        const searchJobsButton = document.getElementById('searchJobsButton');
 
-filterProfessionButton.addEventListener('click', () => {
-    newFetch.fetchByProfession(filterProfession.value)
-})
+        const filterProfession = document.getElementById('filterProfession');
+        const filterProfessionButton = document.getElementById('filterProfessionButton');
+        
+        filterJobsByAmountButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)  
+        })
+        filterCountyButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
+        })
+        searchJobsButton.addEventListener('click', () => {
+            newFetch.fetchBySearch(searchJobs.value);
+        })
+        filterProfessionButton.addEventListener('click', () =>{
+            newFetch.fetchByProfession(filterProfession.value)
+        })
+        
+    }
+    
+}
 
 class Fetch {
-
+    
     fetchLatestJobsByID(rows = 10, ID = 1){
         
         const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${ID}`);
@@ -71,7 +75,7 @@ class Fetch {
 
             location.assign(`${url}single_job_post.html?id=${jobId}`);
             
-        }).catch((error) =>{     
+        }).catch((error) => {     
             console.log(error);
        })
         
@@ -226,11 +230,11 @@ class DOM {
        
 }
 
-
-
 //Starts fetch when entering the homepage
 const newDOM = new DOM;
+const newController = new Controller;
 const newFetch = new Fetch;
 newFetch.fetchLatestJobsByID(10, 1);
 newFetch.fetchAllCounty();
+newController.filterButton();
 newFetch.fetchAllProfessions();
