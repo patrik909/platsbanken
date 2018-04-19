@@ -48,6 +48,28 @@ class Fetch {
         
     }
     
+    fetchSingleJobPostById(jobId){
+        
+        const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
+        
+        fetchSingleJobPost.then((response) => {
+            return response.json();
+        }).then((fetchSingleJobPost) => {
+            let url = new URL(window.location.href);
+            
+            if(url.href.substr(-10) == 'index.html'){
+                url = url.href.slice(0, -10);
+                location.replace(`${url}single_job_post.html?id=${jobId}`);
+            }else{
+                location.replace(`${url}single_job_post.html?id=${jobId}`);
+            }
+            
+        }).catch((error) =>{     
+            console.log(error);
+       })
+        
+    }
+    
 }
 
 class DOM {
