@@ -31,6 +31,9 @@ function displayCountyName(allCounties){
 const filterCountyButton = document.getElementById('filterCountyButton');
 const filterCounty = document.getElementById('filterCounty');
 
+const searchJobs = document.getElementById('searchJobs');
+const searchJobsButton = document.getElementById('searchJobsButton');
+
 filterJobsByAmountButton.addEventListener('click', () => {
     newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
     
@@ -40,6 +43,9 @@ filterCountyButton.addEventListener('click', () => {
     newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
 })
 
+searchJobsButton.addEventListener('click', () => {
+    newFetch.fetchBySearch(searchJobs.value);
+})
 
 
 class Fetch {
@@ -91,7 +97,41 @@ class Fetch {
         }).catch((error) =>{     
             console.log(error);
        })
+    }
+    
+    fetchSingleJobPostById(jobId){
         
+        const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
+        
+        fetchSingleJobPost.then((response) => {
+            return response.json();
+        }).then((fetchSingleJobPost) => {
+            let url = new URL(window.location.href);
+            
+            if(url.href.substr(-10) == 'index.html'){
+                url = url.href.slice(0, -10);
+                location.replace(`${url}single_job_post.html?id=${jobId}`);
+            }else{
+                location.replace(`${url}single_job_post.html?id=${jobId}`);
+            }
+        }).catch((error) =>{     
+            console.log(error);
+       })
+        
+    }
+    
+     fetchBySearch(searchValue){
+        
+        const fetchBySearch = fetch(` http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?nyckelord=${searchValue}`);
+        
+        fetchBySearch.then((response) => {
+            return response.json();
+        }).then((searchResults) => { 
+            console.log(searchResults);
+            newDOM.displayLatestJobs(searchResults);
+        }).catch((error) =>{     
+            console.log(error);
+       })
     }
     
     
@@ -118,6 +158,7 @@ class DOM {
         const outputListJobs = document.getElementById('outputListJobs');
         const jobData = jobs.matchningslista.matchningdata;
         let listedJobs = "";
+        outputListJobs.innerHTML = ""
         
         for(let i = 0; i < jobData.length; i++){
            const date = jobData[i].sista_ansokningsdag
