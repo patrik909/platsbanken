@@ -22,7 +22,7 @@ class Fetch {
         }).then((fetchLatestJobs) => { 
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
             newDOM.displayLatestJobs(fetchLatestJobs);
-        }).catch((error) =>{     
+        }).catch((error) => {     
             console.log(error);
        })
         
@@ -42,7 +42,7 @@ class Fetch {
 
             location.assign(`${url}single_job_post.html?id=${jobId}`);
             
-        }).catch((error) =>{     
+        }).catch((error) => {     
             console.log(error);
        })
         
