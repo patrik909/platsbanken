@@ -13,10 +13,34 @@ function changeUrl(url, substringToDelete){
 const filterJobsByAmount = document.getElementById('filterJobsByAmount');
 const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
 
-filterJobsByAmountButton.addEventListener('click', function(){
-    //console.log(filterJobsByAmount.value);
-    newFetch.fetchLatestJobsByID(filterJobsByAmount.value)
+
+
+function displayCountyName(allCounties){
+    const filterCounty = document.getElementById('filterCounty');
+    let countyOption = "";
+    for(let county of allCounties) {
+
+        const countyID = county.id;
+        const countyName = county.namn;
+
+        countyOption += `<option value="${countyID}">${countyName}</option>`;
+    }
+    filterCounty.innerHTML=countyOption;
+}
+
+const filterCountyButton = document.getElementById('filterCountyButton');
+const filterCounty = document.getElementById('filterCounty');
+
+filterJobsByAmountButton.addEventListener('click', () => {
+    newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
+    
 })
+
+filterCountyButton.addEventListener('click', () => {
+    newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
+})
+
+
 
 class Fetch {
 
@@ -54,6 +78,22 @@ class Fetch {
        })
         
     }
+    
+    fetchAllCounty(){
+        
+        const fetchAllCounty = fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan`);
+        
+        fetchAllCounty.then((response) => {
+            return response.json();
+        }).then((allCounties) => { 
+            console.log(allCounties.soklista.sokdata);
+            displayCountyName(allCounties.soklista.sokdata);
+        }).catch((error) =>{     
+            console.log(error);
+       })
+        
+    }
+    
     
 }
 
@@ -124,3 +164,4 @@ class DOM {
 const newDOM = new DOM;
 const newFetch = new Fetch;
 newFetch.fetchLatestJobsByID(10, 1);
+newFetch.fetchAllCounty();
