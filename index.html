@@ -8,17 +8,36 @@
 <body>
    
     <header><h1>PLATSBANKEN</h1></header>
-    <div id="chooseAmountOfJobs">
-        <button>
+
+    <select id="filterJobsByAmount">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+    </select>
+        <button id="filterJobsByAmountButton">
+            Välj antal
+    </button>
             
-        </button>
-        <button>
-            
-        </button>
-    </div>
+    <select id="filterCounty">
+    </select>
+    <button id="filterCountyButton">Välj Län</button>
+    
+    
+    <input type="text" id="searchJobs">
+    <button type="button" id="searchJobsButton">Search</button>
+    
+    <select id="filterProfession">
+    </select>
+    <button id="filterProfessionButton">Välj yrke</button>
+
     <main>
         <div id="amountOfJobs"></div>
-        <div id="outputListJobs"></div>
+
+        <div id="outputListJobs">
+            <div id="outputJobURL"></div>
+        </div>
+      
+        <button>Mina sparade jobbannonser</button>
         
     </main>
     

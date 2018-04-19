@@ -30,22 +30,46 @@ class DOM {
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
         const employmentConditions = jobDetails.platsannons.villkor;
 
-
         const singleJobPost = document.createElement('div');
         singleJobPost.classList.add('jobDetails');
         singleJobPost.innerHTML = `
             <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
+            <p class="jobUrl">${singleJobDetails.platsannonsUrl}</p>
             <p>${singleJobDetails.annonstext}</p>
             <p>${workplaceDetails.arbetsplatsnamn}</p>
             <p>${singleJobDetails.anstallningstyp}</p>
         `;
 
-        headline.innerHTML = `${singleJobDetails.annonsrubrik}`;
-        outputSingleJobPost.appendChild(singleJobPost);
+		headline.innerHTML = `${singleJobDetails.annonsrubrik}`;
+		outputSingleJobPost.appendChild(singleJobPost);
 
-    }
+	}
+}
+
+class Save {
+	saveAdToBrowser() {
+		let saveAdButton = document.getElementById('saveAdButton');
+		saveAdButton.addEventListener('click', function () {
+			let savedUrls = JSON.parse(localStorage.getItem('adUrlList'));
+			if (savedUrls == null) {
+			let urlArray =[];
+			urlArray.push(url);
+			localStorage['adUrlList'] = JSON.stringify(urlArray);
+			}
+			else {
+				savedUrls.push(url);
+				localStorage['adUrlList'] = JSON.stringify(savedUrls);
+			}
+			console.log(savedUrls = JSON.parse(localStorage.getItem('adUrlList')));
+			
+		})
+	}
 }
 
 const newDOM = new DOM;
 const newFetch = new Fetch;
+
 newFetch.fetchSingleJobPostById(annonsId);
+
+const newSave = new Save;
+newSave.saveAdToBrowser();
