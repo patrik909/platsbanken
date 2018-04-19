@@ -111,8 +111,6 @@ class DOM {
        
 }
 
-
-
 //Starts fetch when entering the homepage
 const newDOM = new DOM;
 const newFetch = new Fetch;
