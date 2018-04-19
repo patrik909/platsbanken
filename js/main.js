@@ -13,35 +13,6 @@ function changeUrl(url, substringToDelete){
 const filterJobsByAmount = document.getElementById('filterJobsByAmount');
 const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
 
-
-
-function displayCountyName(allCounties){
-    const filterCounty = document.getElementById('filterCounty');
-    let countyOption = "";
-    for(let county of allCounties) {
-
-        const countyID = county.id;
-        const countyName = county.namn;
-
-        countyOption += `<option value="${countyID}">${countyName}</option>`;
-    }
-    filterCounty.innerHTML=countyOption;
-}
-
-function displayProfessions(allProfessions){
-    const filterProfession = document.getElementById('filterProfession');
-    let professionOption = "";
-    console.log(allProfessions)
-    for(let profession of allProfessions.soklista.sokdata) {
-
-        const professionID = profession.id;
-        const professionName = profession.namn;
-
-        professionOption += `<option value="${professionID}">${professionName}</option>`;
-    }
-    filterProfession.innerHTML=professionOption;
-}
-
 const filterCountyButton = document.getElementById('filterCountyButton');
 const filterCounty = document.getElementById('filterCounty');
 
@@ -50,6 +21,7 @@ const searchJobsButton = document.getElementById('searchJobsButton');
 
 const filterProfession = document.getElementById('filterProfession');
 const filterProfessionButton = document.getElementById('filterProfessionButton');
+
 
 filterJobsByAmountButton.addEventListener('click', () => {
     newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
@@ -78,7 +50,7 @@ class Fetch {
             return response.json();
         }).then((fetchLatestJobs) => { 
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
-            newDOM.displayLatestJobs(fetchLatestJobs);
+            newDOM.displayListedJobs(fetchLatestJobs);
         }).catch((error) =>{     
             console.log(error);
        })
@@ -112,8 +84,7 @@ class Fetch {
         fetchAllCounty.then((response) => {
             return response.json();
         }).then((allCounties) => { 
-            console.log(allCounties.soklista.sokdata);
-            displayCountyName(allCounties.soklista.sokdata);
+            newDOM.displayOptions(allCounties.soklista.sokdata, filterCounty);
         }).catch((error) =>{     
             console.log(error);
        })
@@ -147,8 +118,7 @@ class Fetch {
         fetchBySearch.then((response) => {
             return response.json();
         }).then((searchResults) => { 
-            console.log(searchResults);
-            newDOM.displayLatestJobs(searchResults);
+            newDOM.displayListedJobs(searchResults);
         }).catch((error) =>{     
             console.log(error);
        })
@@ -161,21 +131,19 @@ class Fetch {
         fetchProfessions.then((response) => {
             return response.json();
         }).then((allProfessions) => { 
-            console.log(allProfessions);
-            displayProfessions(allProfessions);
+            newDOM.displayOptions(allProfessions.soklista.sokdata, filterProfession);
         }).catch((error) =>{     
             console.log(error);
        })
     }
     
     fetchByProfession(professionID){
-        console.log(professionID)
         const fetchProfession = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesomradeid=${professionID}&sida=1&antalrader=20`);
         
         fetchProfession.then((response) => {
             return response.json();
         }).then((profession) => {
-            newDOM.displayLatestJobs(profession);
+            newDOM.displayListedJobs(profession);
         }).catch((error) =>{     
             console.log(error);
        })
@@ -199,14 +167,27 @@ class DOM {
         
     }
     
-    displayLatestJobs(jobs){
+    displayOptions(optionsValue, optionOutput){
+        let options = "";
+        for(let option of optionsValue) {
+
+            const optionID = option.id;
+            const optionName = option.namn;
+
+            options += `<option value="${optionID}">${optionName}</option>`;
+        }
+        optionOutput.innerHTML = options;
+    }
+    
+    displayListedJobs(jobs){
         
         const outputListJobs = document.getElementById('outputListJobs');
         const jobData = jobs.matchningslista.matchningdata;
         let listedJobs = "";
         outputListJobs.innerHTML = ""
+        const jobDataLength = jobData.length;
         
-        for(let i = 0; i < jobData.length; i++){
+        for(let i = 0; i < jobDataLength; i++){
            const date = jobData[i].sista_ansokningsdag
             //Sending info to the contructor, which formates the data.
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
