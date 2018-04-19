@@ -28,11 +28,28 @@ function displayCountyName(allCounties){
     filterCounty.innerHTML=countyOption;
 }
 
+function displayProfessions(allProfessions){
+    const filterProfession = document.getElementById('filterProfession');
+    let professionOption = "";
+    console.log(allProfessions)
+    for(let profession of allProfessions.soklista.sokdata) {
+
+        const professionID = profession.id;
+        const professionName = profession.namn;
+
+        professionOption += `<option value="${professionID}">${professionName}</option>`;
+    }
+    filterProfession.innerHTML=professionOption;
+}
+
 const filterCountyButton = document.getElementById('filterCountyButton');
 const filterCounty = document.getElementById('filterCounty');
 
 const searchJobs = document.getElementById('searchJobs');
 const searchJobsButton = document.getElementById('searchJobsButton');
+
+const filterProfession = document.getElementById('filterProfession');
+const filterProfessionButton = document.getElementById('filterProfessionButton');
 
 filterJobsByAmountButton.addEventListener('click', () => {
     newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
@@ -47,6 +64,9 @@ searchJobsButton.addEventListener('click', () => {
     newFetch.fetchBySearch(searchJobs.value);
 })
 
+filterProfessionButton.addEventListener('click', () => {
+    newFetch.fetchByProfession(filterProfession.value)
+})
 
 class Fetch {
 
@@ -134,6 +154,32 @@ class Fetch {
        })
     }
     
+    fetchAllProfessions(){
+        
+        const fetchProfessions = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden`);
+        
+        fetchProfessions.then((response) => {
+            return response.json();
+        }).then((allProfessions) => { 
+            console.log(allProfessions);
+            displayProfessions(allProfessions);
+        }).catch((error) =>{     
+            console.log(error);
+       })
+    }
+    
+    fetchByProfession(professionID){
+        console.log(professionID)
+        const fetchProfession = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesomradeid=${professionID}&sida=1&antalrader=20`);
+        
+        fetchProfession.then((response) => {
+            return response.json();
+        }).then((profession) => {
+            newDOM.displayLatestJobs(profession);
+        }).catch((error) =>{     
+            console.log(error);
+       })
+    }
     
 }
 
@@ -206,3 +252,4 @@ const newDOM = new DOM;
 const newFetch = new Fetch;
 newFetch.fetchLatestJobsByID(10, 1);
 newFetch.fetchAllCounty();
+newFetch.fetchAllProfessions();
