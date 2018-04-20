@@ -34,7 +34,6 @@ class DOM {
         singleJobPost.classList.add('jobDetails');
         singleJobPost.innerHTML = `
             <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
-            <p class="jobUrl">${singleJobDetails.platsannonsUrl}</p>
             <p>${singleJobDetails.annonstext}</p>
             <p>${workplaceDetails.arbetsplatsnamn}</p>
             <p>${singleJobDetails.anstallningstyp}</p>
@@ -43,6 +42,12 @@ class DOM {
 		headline.innerHTML = `${singleJobDetails.annonsrubrik}`;
 		outputSingleJobPost.appendChild(singleJobPost);
 
+	}
+	
+	displayUrl(){
+		const displayUrl = document.getElementById('displayUrl');
+		displayUrl.classList.toggle('hidden');
+		displayUrl.value = url;
 	}
 }
 
@@ -66,6 +71,17 @@ class Save {
 	}
 }
 
+class Controller {
+	constructor(){
+		this.newDOM = newDOM;
+	}
+	
+	shareButtonEventListener(){
+		const shareButton = document.getElementById('shareButton');
+		shareButton.addEventListener('click', this.newDOM.displayUrl);
+	}
+}
+
 const newDOM = new DOM;
 const newFetch = new Fetch;
 
@@ -73,3 +89,6 @@ newFetch.fetchSingleJobPostById(annonsId);
 
 const newSave = new Save;
 newSave.saveAdToBrowser();
+
+const newController = new Controller;
+newController.shareButtonEventListener();
