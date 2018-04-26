@@ -233,12 +233,13 @@ class DOM {
 	}
 
 	displaySavedAds() {
-		var savedAds = JSON.parse(localStorage.getItem('adUrlList'));
-		console.log(savedAds);
+		var savedAds = JSON.parse(localStorage.getItem('jobList'));
+		
 		const savedAdsWrapper = document.createElement('div');
 		savedAdsWrapper.innerHTML = `<ul id="savedAdsList"></ul>`;
 		const mainElement = document.querySelector('main');
 		mainElement.appendChild(savedAdsWrapper);
+        console.log(savedAds);
 		for (let adUrl of savedAds) {
 			let savedAd = document.createElement('li');
 			savedAd.innerHTML = adUrl;

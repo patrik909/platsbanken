@@ -29,10 +29,12 @@ class DOM {
         const singleJobDetails = jobDetails.platsannons.annons;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
         const employmentConditions = jobDetails.platsannons.villkor;
+        const jobId = jobDetails.platsannons.annons.annonsid;
 
         const singleJobPost = document.createElement('div');
         singleJobPost.classList.add('jobDetails');
         singleJobPost.innerHTML = `
+            <button id='saveAdButton' data-id='${jobId}'>Spara</button>
             <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
             <p>${singleJobDetails.annonstext}</p>
             <p>${workplaceDetails.arbetsplatsnamn}</p>
@@ -41,6 +43,26 @@ class DOM {
 
 		headline.innerHTML = `${singleJobDetails.annonsrubrik}`;
 		outputSingleJobPost.appendChild(singleJobPost);
+        
+        let saveAdButton = document.getElementById('saveAdButton');
+		saveAdButton.addEventListener('click', function () {
+            console.log(this.dataset.id);
+            
+            let savedJobId = JSON.parse(localStorage.getItem('jobList'));
+            
+			if (savedJobId == null) {
+                let jobIdArray = [];
+                jobIdArray.push(this.dataset.id);
+                localStorage.setItem('jobList', JSON.stringify(jobIdArray));
+                
+			}
+			else {
+                savedJobId.push(this.dataset.id);
+                localStorage.setItem('jobList', JSON.stringify(savedJobId));
+			}
+            
+            
+        })
 
 	}
 	
@@ -55,18 +77,19 @@ class Save {
 	saveAdToBrowser() {
 		let saveAdButton = document.getElementById('saveAdButton');
 		saveAdButton.addEventListener('click', function () {
-			let savedUrls = JSON.parse(localStorage.getItem('adUrlList'));
-			if (savedUrls == null) {
-			let urlArray =[];
-			urlArray.push(url);
-			localStorage['adUrlList'] = JSON.stringify(urlArray);
-			}
-			else {
-				savedUrls.push(url);
-				localStorage['adUrlList'] = JSON.stringify(savedUrls);
-			}
-			console.log(savedUrls = JSON.parse(localStorage.getItem('adUrlList')));
-			
+            console.log(this.dataset.track);
+//			let savedJobId = JSON.parse(localStorage.getItem('jobList'));
+//			if (savedJobId == null) {
+//                let urlArray = [];
+//                urlArray.push(this.dataset.track);
+//                localStorage['jobList'] = JSON.stringify(urlArray);
+//			}
+//			else {
+//				savedJobId.push(url);
+//				localStorage['jobList'] = JSON.stringify(savedJobId);
+//			}
+//			console.log(savedJobId = JSON.parse(localStorage.getItem('jobList')));
+//			
 		})
 	}
 }
@@ -87,8 +110,8 @@ const newFetch = new Fetch;
 
 newFetch.fetchSingleJobPostById(annonsId);
 
-const newSave = new Save;
-newSave.saveAdToBrowser();
+//const newSave = new Save;
+//newSave.saveAdToBrowser();
 
 const newController = new Controller;
 newController.shareButtonEventListener();
