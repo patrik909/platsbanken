@@ -47,9 +47,17 @@ class Controller {
     }
 
     SavedAdsButtonEventlistener() {
-        const displaySavedAdsButton = document.getElementById('savedAds');
-        displaySavedAdsButton.addEventListener('click', this.newDOM.displaySavedAds)
-    } 
+
+      const displaySavedAdsButton = document.getElementById('savedAds');
+      displaySavedAdsButton.addEventListener('click', () => {
+          let savedAds = JSON.parse(localStorage.getItem('jobList'));
+          newFetch.fetchById(savedAds)
+      })
+                                             
+        //                                     newFetch.fetchById)
+      //  let savedAds = JSON.parse(localStorage.getItem('jobList'));
+    //} 
+    }
 }
 
 class Fetch {
@@ -131,7 +139,7 @@ class Fetch {
             return response.json();
         }).then((searchResults) => {
             newDOM.displayListedJobs(searchResults);
-        }).catch((error) => {
+        }).catch((error) => {     
             console.log(error);
         })
     }
@@ -160,7 +168,23 @@ class Fetch {
             console.log(error);
         })
     }
-
+  
+    fetchById(saveAds){
+        
+        let jobArray = []
+        for (let adUrl of saveAds) {
+            fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
+                return response.json();
+            }).then((job) => {
+                //FIXA
+                jobArray.push(job)
+                newDOM.displaySavedAds(jobArray)
+            }).catch((error) =>{     
+                console.log(error);
+            })
+            
+		  }
+    }
 }
 
 class DOM {
@@ -170,18 +194,15 @@ class DOM {
 		const amountOfJobsDiv = document.getElementById('amountOfJobs');
 		const lan = jobs.matchningslista.matchningdata[0].lan;
 		const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
-
-		const amountOfJobsContent = `
-            <p> Antal jobb i <span>${lan}:</span> ${amountOfJobs}
-        `;
-
-        amountOfJobsDiv.innerHTML = amountOfJobsContent;
-
+		const amountOfJobsContent = `<p> Antal jobb i <span>${lan}:</span> ${amountOfJobs}`;
+        
+        amountOfJobsDiv.innerHTML=amountOfJobsContent;
+        
     }
-
-    displayOptions(optionsValue, optionOutput) {
-        let options = "";
-        for (let option of optionsValue) {
+    
+    displayOptions(optionsValue, optionOutput){
+        let options = '';
+        for(let option of optionsValue) {
 
             const optionID = option.id;
             const optionName = option.namn;
@@ -195,20 +216,20 @@ class DOM {
 
         const outputListJobs = document.getElementById('outputListJobs');
         const jobData = jobs.matchningslista.matchningdata;
-        let listedJobs = "";
-        outputListJobs.innerHTML = ""
+        let listedJobs = '';
+        outputListJobs.innerHTML = '';
         const jobDataLength = jobData.length;
 
-        for (let i = 0; i < jobDataLength; i++) {
-            const date = jobData[i].sista_ansokningsdag
+        for(let i = 0; i < jobDataLength; i++){
+           const date = jobData[i].sista_ansokningsdag;
             //Sending info to the contructor, which formates the data.
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
-
-            let formatedDate = ""
-            if (date) {
-                formatedDate = date.substring(0, 10);
+            
+            let formatedDate = '';
+            if(date){
+                formatedDate = date.substring(0,10);
             } else {
-                formatedDate = "Öppen";
+                formatedDate = 'Öppen';
             }
 
            const latestJob = document.createElement('div');
@@ -225,27 +246,45 @@ class DOM {
 			outputListJobs.appendChild(latestJob);
 
 			let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
-			readMoreButton.addEventListener('click', function () {
+			readMoreButton.addEventListener('click', () => {
 				newFetch.fetchSingleJobPostById(jobData[i].annonsid);
 			});
 		}
-
-    }
+	}
     
-	displaySavedAds() {
-		var savedAds = JSON.parse(localStorage.getItem('adUrlList'));
-		console.log(savedAds);
+    //FIXA
+	displaySavedAds(jobArray) {
+        console.log(jobArray)
+		//let savedAds = JSON.parse(localStorage.getItem('jobList'));
 		const savedAdsWrapper = document.createElement('div');
 		savedAdsWrapper.innerHTML = `<ul id="savedAdsList"></ul>`;
 		const mainElement = document.querySelector('main');
 		mainElement.appendChild(savedAdsWrapper);
-		for (let adUrl of savedAds) {
-			let savedAd = document.createElement('li');
-			savedAd.innerHTML = adUrl;
-			let savedAdsList = document.getElementById('savedAdsList');
-			savedAdsList.appendChild(savedAd);
-			
-		}
+        
+        let savedAdsList = document.getElementById('savedAdsList');
+        let savedJobList = "";
+        
+        //const jobData = jobArray.platsannons.annons;
+    
+        const jobDataLength = jobArray.length;
+        console.log(jobDataLength);
+        
+        for(let i = 0; i < jobDataLength; i++){
+            
+//        for (let job of jobArray){
+            
+         savedJobList += `<li>${jobArray[i].platsannons.annons.annonsrubrik}<button id="${jobArray[i].platsannons.annons.annonsid}">Läs mer!</button></li>`;
+        
+//			let readMoreButton = document.getElementById(`${jobArray[i].platsannons.annons.annonsid}`);
+//			readMoreButton.addEventListener('click', function () {
+//				console.log("hej");
+//                //newFetch.fetchSingleJobPostById(${job.platsannons.annons.annonsid});
+//			});
+  
+        }
+        
+        savedAdsList.innerHTML=savedJobList;
+
 	}
 
 	formateDate(date) {

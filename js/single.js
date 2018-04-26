@@ -30,12 +30,12 @@ class DOM {
         const singleJobDetails = jobDetails.platsannons.annons;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
         const employmentConditions = jobDetails.platsannons.villkor;
-        const jobId = jobDetails.platsannons.annons.id;
+        const jobId = jobDetails.platsannons.annons.annonsid;
 
         const singleJobPost = document.createElement('div');
         singleJobPost.classList.add('jobDetails');
         singleJobPost.innerHTML = `
-            <button id="saveadButton" data-id="${jobId}">
+            <button id='saveAdButton' data-id='${jobId}'>Spara</button>
             <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
             <p>${singleJobDetails.annonstext}</p>
             <p>${workplaceDetails.arbetsplatsnamn}</p>
@@ -44,6 +44,11 @@ class DOM {
 
 		headline.innerHTML = `${singleJobDetails.annonsrubrik}`;
 		outputSingleJobPost.appendChild(singleJobPost);
+        
+        let saveAdButton = document.getElementById('saveAdButton');
+		saveAdButton.addEventListener('click', function () {
+            newSave.saveAdToBrowser(this.dataset.id);
+        })
 
 	}
     
@@ -55,31 +60,24 @@ class DOM {
 		displayUrl.value = url;
 	}
 }
-/*
-//class Save {
-//	saveAdToBrowser() {
-//		let saveAdButton = document.getElementById('saveAdButton');
-//		saveAdButton.addEventListener('click', function () {
-//			//let savedUrls = JSON.parse(localStorage.getItem('adUrlList'));
-//			//if (savedUrls == null) {
-//                //localStorage.setItem("savedAdId", jobId);
-//                /*
-//			let urlArray =[];
-//			urlArray.push(url);
-//			localStorage['adUrlList'] = JSON.stringify(urlArray);*/
-//			//}
-//			//else {
-//				//savedUrls.push(url);
-//				//localStorage['adUrlList'] = //JSON.stringify(savedUrls);
-//			//}
-//			//console.log(savedUrls = //JSON.parse(localStorage.getItem('adUrlList')));
-//            //console.log(savedUrls)/*
-//            localStorage.setItem("savedAdId", jobId);
-//            console.log(localStorage.getItem('savedAdId'))
-//		})
-//	}
-//}
-//*/
+
+class Save {
+	saveAdToBrowser(id) {
+    
+        let savedJobId = JSON.parse(localStorage.getItem('jobList'));  
+
+        if (savedJobId == null) {
+            let jobIdArray = [];
+            jobIdArray.push(id);
+            localStorage.setItem('jobList', JSON.stringify(jobIdArray));
+        }    
+        else {
+            savedJobId.push(id);
+            localStorage.setItem('jobList', JSON.stringify(savedJobId));
+        }
+	}
+}
+
 class Controller {
 	constructor(){
 		this.newDOM = newDOM;
@@ -93,11 +91,12 @@ class Controller {
 
 const newDOM = new DOM;
 const newFetch = new Fetch;
+const newSave = new Save;
 
 newFetch.fetchSingleJobPostById(annonsId);
 
-const newSave = new Save;
-newSave.saveAdToBrowser();
+//const newSave = new Save;
+//newSave.saveAdToBrowser();
 
 const newController = new Controller;
 newController.shareButtonEventListener();
