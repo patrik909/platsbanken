@@ -1,10 +1,19 @@
 body{
-    font-family: 'helvetica';
+    font-family: 'Lato', sans-serif;
     font-size: 14px;
 }
 
 h1{
     text-align: center;
+    font-weight: 900;
+    font-size: 4em;
+    letter-spacing: 5px;
+}
+
+#searchForm button{
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 5px 10px;
 }
 
 .latestJobs{

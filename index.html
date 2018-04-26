@@ -3,34 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Platsbanken</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,900" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
    
     <header><h1>PLATSBANKEN</h1></header>
-
-    <select id="filterJobsByAmount">
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="30">30</option>
-    </select>
-        <button id="filterJobsByAmountButton">
-            Välj antal
-    </button>
-            
-    <select id="filterCounty">
-    </select>
-    <button id="filterCountyButton">Välj Län</button>
-    
-    
-    <input type="text" id="searchJobs">
-    <button type="button" id="searchJobsButton">Search</button>
-    
-    <select id="filterProfession">
-    </select>
-    <button id="filterProfessionButton">Välj yrke</button>
-
     <main>
+       
+        <form id="searchForm">
+            <div id="upperForm">
+               
+                <select id="filterProfession"></select>
+                <button type="button" id="filterProfessionButton">
+                    Välj yrke
+                </button>
+
+                <select id="filterCounty"></select>
+                <button type="button" id="filterCountyButton">
+                    Välj Län
+                </button>
+
+                <select id="filterJobsByAmount">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
+                <button type="button" id="filterJobsByAmountButton">
+                    Välj antal
+                </button>
+                
+            </div>
+            <div id="lowerForm">
+            
+                <input type="text" id="searchJobs">
+                <button type="button" id="searchJobsButton">
+                    Sök
+                </button>
+                
+            </div>  
+        </form>
+        
         <div id="amountOfJobs"></div>
 
         <div id="outputListJobs">

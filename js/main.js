@@ -1,10 +1,10 @@
-function changeUrl(url, substringToDelete){
+function changeUrl(url, substringToDelete) {
 
     let substringLength = substringToDelete.length;
-    let newUrl = '';  
-  
-    if(url.href.substr(-substringLength) == substringToDelete){
-        newUrl = url.href.slice(0, -substringToDelete);     
+    let newUrl = '';
+
+    if (url.href.substr(-substringLength) == substringToDelete) {
+        newUrl = url.href.slice(0, -substringToDelete);
     }
 
     return newUrl;
@@ -12,9 +12,9 @@ function changeUrl(url, substringToDelete){
 
 
 class Controller {
-    
-    filterButton(){
-        
+
+    filterButton() {
+
         const filterJobsByAmount = document.getElementById('filterJobsByAmount');
         const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
 
@@ -26,9 +26,9 @@ class Controller {
 
         const filterProfession = document.getElementById('filterProfession');
         const filterProfessionButton = document.getElementById('filterProfessionButton');
-        
+
         filterJobsByAmountButton.addEventListener('click', () => {
-            newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)  
+            newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
         })
         filterCountyButton.addEventListener('click', () => {
             newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
@@ -36,144 +36,144 @@ class Controller {
         searchJobsButton.addEventListener('click', () => {
             newFetch.fetchBySearch(searchJobs.value);
         })
-        filterProfessionButton.addEventListener('click', () =>{
+        filterProfessionButton.addEventListener('click', () => {
             newFetch.fetchByProfession(filterProfession.value)
         })
-        
+
     }
-    
+
 }
 
 class Fetch {
-    
-    fetchLatestJobsByID(rows = 10, ID = 1){
-        
+
+    fetchLatestJobsByID(rows = 10, ID = 1) {
+
         const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${ID}`);
-        
+
         fetchLatestJobs.then((response) => {
             return response.json();
-        }).then((fetchLatestJobs) => { 
+        }).then((fetchLatestJobs) => {
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
             newDOM.displayListedJobs(fetchLatestJobs);
-        }).catch((error) =>{     
+        }).catch((error) => {
             console.log(error);
-       })
-        
+        })
+
     }
 
-    fetchSingleJobPostById(jobId){
-        
+    fetchSingleJobPostById(jobId) {
+
         const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
-        
+
         fetchSingleJobPost.then((response) => {
             return response.json();
         }).then((fetchSingleJobPost) => {
-           
+
             let oldUrl = new URL(window.location.href);
-            let stringInUrlToDelete ='index.html';
-            let url = changeUrl(oldUrl, stringInUrlToDelete);     
+            let stringInUrlToDelete = 'index.html';
+            let url = changeUrl(oldUrl, stringInUrlToDelete);
 
             location.assign(`${url}single_job_post.html?id=${jobId}`);
-            
-        }).catch((error) => {     
+
+        }).catch((error) => {
             console.log(error);
-       })
-        
+        })
+
     }
-    
-    fetchAllCounty(){
-        
+
+    fetchAllCounty() {
+
         const fetchAllCounty = fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan`);
-        
+
         fetchAllCounty.then((response) => {
             return response.json();
-        }).then((allCounties) => { 
+        }).then((allCounties) => {
             newDOM.displayOptions(allCounties.soklista.sokdata, filterCounty);
-        }).catch((error) =>{     
+        }).catch((error) => {
             console.log(error);
-       })
+        })
     }
-    
-    fetchSingleJobPostById(jobId){
-        
+
+    fetchSingleJobPostById(jobId) {
+
         const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
-        
+
         fetchSingleJobPost.then((response) => {
             return response.json();
         }).then((fetchSingleJobPost) => {
             let url = new URL(window.location.href);
-            
-            if(url.href.substr(-10) == 'index.html'){
+
+            if (url.href.substr(-10) == 'index.html') {
                 url = url.href.slice(0, -10);
                 location.replace(`${url}single_job_post.html?id=${jobId}`);
-            }else{
+            } else {
                 location.replace(`${url}single_job_post.html?id=${jobId}`);
             }
-        }).catch((error) =>{     
+        }).catch((error) => {
             console.log(error);
-       })
-        
+        })
+
     }
-    
-     fetchBySearch(searchValue){
-        
+
+    fetchBySearch(searchValue) {
+
         const fetchBySearch = fetch(` http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?nyckelord=${searchValue}`);
-        
+
         fetchBySearch.then((response) => {
             return response.json();
-        }).then((searchResults) => { 
+        }).then((searchResults) => {
             newDOM.displayListedJobs(searchResults);
-        }).catch((error) =>{     
+        }).catch((error) => {
             console.log(error);
-       })
+        })
     }
-    
-    fetchAllProfessions(){
-        
+
+    fetchAllProfessions() {
+
         const fetchProfessions = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden`);
-        
+
         fetchProfessions.then((response) => {
             return response.json();
-        }).then((allProfessions) => { 
+        }).then((allProfessions) => {
             newDOM.displayOptions(allProfessions.soklista.sokdata, filterProfession);
-        }).catch((error) =>{     
+        }).catch((error) => {
             console.log(error);
-       })
+        })
     }
-    
-    fetchByProfession(professionID){
+
+    fetchByProfession(professionID) {
         const fetchProfession = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesomradeid=${professionID}&sida=1&antalrader=20`);
-        
+
         fetchProfession.then((response) => {
             return response.json();
         }).then((profession) => {
             newDOM.displayListedJobs(profession);
-        }).catch((error) =>{     
+        }).catch((error) => {
             console.log(error);
-       })
+        })
     }
-    
+
 }
 
 class DOM {
-    
-    displayTotalAmoutOfJobs(jobs){
+
+    displayTotalAmoutOfJobs(jobs) {
 
         const amountOfJobsDiv = document.getElementById('amountOfJobs');
         const lan = jobs.matchningslista.matchningdata[0].lan;
         const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
-        
+
         const amountOfJobsContent = `
             <p> Antal jobb i ${lan}: ${amountOfJobs}
         `;
-        
-        amountOfJobsDiv.innerHTML=amountOfJobsContent;
-        
+
+        amountOfJobsDiv.innerHTML = amountOfJobsContent;
+
     }
-    
-    displayOptions(optionsValue, optionOutput){
+
+    displayOptions(optionsValue, optionOutput) {
         let options = "";
-        for(let option of optionsValue) {
+        for (let option of optionsValue) {
 
             const optionID = option.id;
             const optionName = option.namn;
@@ -182,27 +182,27 @@ class DOM {
         }
         optionOutput.innerHTML = options;
     }
-    
-    displayListedJobs(jobs){
-        
+
+    displayListedJobs(jobs) {
+
         const outputListJobs = document.getElementById('outputListJobs');
         const jobData = jobs.matchningslista.matchningdata;
         let listedJobs = "";
         outputListJobs.innerHTML = ""
         const jobDataLength = jobData.length;
-        
-        for(let i = 0; i < jobDataLength; i++){
-           const date = jobData[i].sista_ansokningsdag
+
+        for (let i = 0; i < jobDataLength; i++) {
+            const date = jobData[i].sista_ansokningsdag
             //Sending info to the contructor, which formates the data.
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
-            
+
             let formatedDate = ""
-            if(date){
-                formatedDate = date.substring(0,10);
+            if (date) {
+                formatedDate = date.substring(0, 10);
             } else {
                 formatedDate = "Oklart";
             }
-            
+
             const latestJob = document.createElement('div');
             latestJob.classList.add('latestJobs');
             latestJob.innerHTML = `
@@ -213,21 +213,21 @@ class DOM {
                 <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
                 <button id="${jobData[i].annonsid}">Läs mer!</button>
             `;
-            
+
             outputListJobs.appendChild(latestJob);
-            
+
             let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
-            readMoreButton.addEventListener('click', function(){
+            readMoreButton.addEventListener('click', function () {
                 newFetch.fetchSingleJobPostById(jobData[i].annonsid);
             });
         }
-        
+
     }
-    
-    formateDate(date){
+
+    formateDate(date) {
         console.log(date)
     }
-       
+
 }
 
 //Starts fetch when entering the homepage
