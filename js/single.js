@@ -46,22 +46,7 @@ class DOM {
         
         let saveAdButton = document.getElementById('saveAdButton');
 		saveAdButton.addEventListener('click', function () {
-            console.log(this.dataset.id);
-            
-            let savedJobId = JSON.parse(localStorage.getItem('jobList'));
-            
-			if (savedJobId == null) {
-                let jobIdArray = [];
-                jobIdArray.push(this.dataset.id);
-                localStorage.setItem('jobList', JSON.stringify(jobIdArray));
-                
-			}
-			else {
-                savedJobId.push(this.dataset.id);
-                localStorage.setItem('jobList', JSON.stringify(savedJobId));
-			}
-            
-            
+            newSave.saveAdToBrowser(this.dataset.id);
         })
 
 	}
@@ -74,23 +59,19 @@ class DOM {
 }
 
 class Save {
-	saveAdToBrowser() {
-		let saveAdButton = document.getElementById('saveAdButton');
-		saveAdButton.addEventListener('click', function () {
-            console.log(this.dataset.track);
-//			let savedJobId = JSON.parse(localStorage.getItem('jobList'));
-//			if (savedJobId == null) {
-//                let urlArray = [];
-//                urlArray.push(this.dataset.track);
-//                localStorage['jobList'] = JSON.stringify(urlArray);
-//			}
-//			else {
-//				savedJobId.push(url);
-//				localStorage['jobList'] = JSON.stringify(savedJobId);
-//			}
-//			console.log(savedJobId = JSON.parse(localStorage.getItem('jobList')));
-//			
-		})
+	saveAdToBrowser(id) {
+    
+        let savedJobId = JSON.parse(localStorage.getItem('jobList'));  
+
+        if (savedJobId == null) {
+            let jobIdArray = [];
+            jobIdArray.push(id);
+            localStorage.setItem('jobList', JSON.stringify(jobIdArray));
+        }    
+        else {
+            savedJobId.push(id);
+            localStorage.setItem('jobList', JSON.stringify(savedJobId));
+        }
 	}
 }
 
@@ -107,6 +88,7 @@ class Controller {
 
 const newDOM = new DOM;
 const newFetch = new Fetch;
+const newSave = new Save;
 
 newFetch.fetchSingleJobPostById(annonsId);
 
