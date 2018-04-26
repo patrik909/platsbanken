@@ -1,27 +1,147 @@
-body{
-    font-family: 'helvetica';
+.hidden{
+	display: none;
+}
+
+/* -- GENERAL STYLING -- */
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Lato', sans-serif;
     font-size: 14px;
+    letter-spacing: 1px;
+}
+
+button {
+    cursor: pointer;
+    outline: none;
+}
+
+input {
+    outline: none;
 }
 
 h1{
     text-align: center;
+    font-weight: 900;
+    letter-spacing: 10px;
+    font-size: 4em;
 }
 
-.latestJobs{
-    background: #99c7d8;
-    padding: 30px;
-    margin-bottom: 10px;
-    border-radius: 10px;
+/* ---- SEARCHFIELD STYLING ---- */
+
+#searchForm {
+    background: black;
+    padding: 20px;
+    width: 100vw;
 }
 
-.latestJobs h3{
-    font-size: 1.6em;
+#upperForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.latestJobs p span{
+#upperForm button {
+    padding: 5px 15px;
+    margin: 0 5px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 700;
+}
+
+#upperForm select {
+    font-size: 1em;
+    background: white;
+    border: none;
+    margin: 0 5px;
+    height: 20px;
+}
+#lowerForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+#lowerForm input {
+    outline: none;
+    padding: 10px 15px;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 30px 0px 0px 30px;
+    border: none;
+    font-size: 1em;
+}
+
+#lowerForm button {
+    background: white;
+    padding: 5px 15px;
+    border-radius: 0px 30px 30px 0px;
+    border: none;
+}
+
+#lowerForm button img {
+    height: 20px;
+}
+
+/* ---- MAIN STYLING ---- */
+
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#amountOfJobs {
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 1.1em;
+    margin: 25px 0;
     font-weight: 600;
 }
 
-.hidden{
-	display: none;
+.latestJobs {
+    background: #e5e5e5;
+    border-radius: 10px;
+    padding: 40px;
+    width: 850px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.latestJobs h3 {
+    font-size: 1.3em;
+    font-weight: 900;
+    margin: 0;
+}
+
+.latestJobs span {
+    font-weight: 700;
+}
+
+.latestJobs button {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    transition: 200ms;
+}
+
+.latestJobs button:hover {
+    background: #565656;
+}
+
+#savedAds {
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border: none;
 }

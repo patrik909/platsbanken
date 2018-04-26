@@ -4,7 +4,7 @@ const annonsId = url.searchParams.get("id");
 class Fetch {
     
     fetchSingleJobPostById(jobId){
-
+        
         const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
 
         fetchSingleJobPost.then((response) => {
@@ -17,6 +17,7 @@ class Fetch {
 
     }
 }
+
 
 class DOM {
     
@@ -50,6 +51,8 @@ class DOM {
         })
 
 	}
+    
+    //console.log()
 	
 	displayUrl(){
 		const displayUrl = document.getElementById('displayUrl');
