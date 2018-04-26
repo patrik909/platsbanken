@@ -171,7 +171,7 @@ class Fetch {
   
     fetchById(saveAds){
         
-        let jobArray = []
+        let jobArray = [];
         for (let adUrl of saveAds) {
             fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
                 return response.json();
@@ -183,7 +183,7 @@ class Fetch {
                 console.log(error);
             })
             
-		  }
+        }
     }
 }
 
@@ -252,39 +252,25 @@ class DOM {
 		}
 	}
     
-    //FIXA
 	displaySavedAds(jobArray) {
-        console.log(jobArray)
-		//let savedAds = JSON.parse(localStorage.getItem('jobList'));
-		const savedAdsWrapper = document.createElement('div');
-		savedAdsWrapper.innerHTML = `<ul id="savedAdsList"></ul>`;
-		const mainElement = document.querySelector('main');
-		mainElement.appendChild(savedAdsWrapper);
-        
-        let savedAdsList = document.getElementById('savedAdsList');
-        let savedJobList = "";
-        
-        //const jobData = jobArray.platsannons.annons;
-    
-        const jobDataLength = jobArray.length;
-        console.log(jobDataLength);
+        const outputSavedJobs = document.getElementById('outputSavedJobs');
+        outputSavedJobs.innerHTML = '';
+        const savedAdsList = document.createElement('ul');
+        const jobDataLength = jobArray.length;        
         
         for(let i = 0; i < jobDataLength; i++){
+            const listElement = document.createElement('li');
             
-//        for (let job of jobArray){
+            listElement.innerHTML = `${jobArray[i].platsannons.annons.annonsrubrik}<button id='savedAd${jobArray[i].platsannons.annons.annonsid}'>Läs mer!</button>`;
             
-         savedJobList += `<li>${jobArray[i].platsannons.annons.annonsrubrik}<button id="${jobArray[i].platsannons.annons.annonsid}">Läs mer!</button></li>`;
+            savedAdsList.appendChild(listElement);
+            outputSavedJobs.appendChild(savedAdsList);
         
-//			let readMoreButton = document.getElementById(`${jobArray[i].platsannons.annons.annonsid}`);
-//			readMoreButton.addEventListener('click', function () {
-//				console.log("hej");
-//                //newFetch.fetchSingleJobPostById(${job.platsannons.annons.annonsid});
-//			});
-  
+			let savedAdButton = document.getElementById(`savedAd${jobArray[i].platsannons.annons.annonsid}`);
+			savedAdButton.addEventListener('click', function () {
+                newFetch.fetchSingleJobPostById(`${jobArray[i].platsannons.annons.annonsid}`);
+			});
         }
-        
-        savedAdsList.innerHTML=savedJobList;
-
 	}
 
 	formateDate(date) {
