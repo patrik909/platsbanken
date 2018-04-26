@@ -4,7 +4,7 @@ const annonsId = url.searchParams.get("id");
 class Fetch {
     
     fetchSingleJobPostById(jobId){
-
+        
         const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
 
         fetchSingleJobPost.then((response) => {
@@ -18,6 +18,7 @@ class Fetch {
     }
 }
 
+
 class DOM {
     
     displaySingleJobPost(jobDetails){
@@ -29,10 +30,12 @@ class DOM {
         const singleJobDetails = jobDetails.platsannons.annons;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
         const employmentConditions = jobDetails.platsannons.villkor;
+        const jobId = jobDetails.platsannons.annons.id;
 
         const singleJobPost = document.createElement('div');
         singleJobPost.classList.add('jobDetails');
         singleJobPost.innerHTML = `
+            <button id="saveadButton" data-id="${jobId}">
             <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
             <p>${singleJobDetails.annonstext}</p>
             <p>${workplaceDetails.arbetsplatsnamn}</p>
@@ -43,6 +46,8 @@ class DOM {
 		outputSingleJobPost.appendChild(singleJobPost);
 
 	}
+    
+    //console.log()
 	
 	displayUrl(){
 		const displayUrl = document.getElementById('displayUrl');
@@ -50,27 +55,31 @@ class DOM {
 		displayUrl.value = url;
 	}
 }
-
-class Save {
-	saveAdToBrowser() {
-		let saveAdButton = document.getElementById('saveAdButton');
-		saveAdButton.addEventListener('click', function () {
-			let savedUrls = JSON.parse(localStorage.getItem('adUrlList'));
-			if (savedUrls == null) {
-			let urlArray =[];
-			urlArray.push(url);
-			localStorage['adUrlList'] = JSON.stringify(urlArray);
-			}
-			else {
-				savedUrls.push(url);
-				localStorage['adUrlList'] = JSON.stringify(savedUrls);
-			}
-			console.log(savedUrls = JSON.parse(localStorage.getItem('adUrlList')));
-			
-		})
-	}
-}
-
+/*
+//class Save {
+//	saveAdToBrowser() {
+//		let saveAdButton = document.getElementById('saveAdButton');
+//		saveAdButton.addEventListener('click', function () {
+//			//let savedUrls = JSON.parse(localStorage.getItem('adUrlList'));
+//			//if (savedUrls == null) {
+//                //localStorage.setItem("savedAdId", jobId);
+//                /*
+//			let urlArray =[];
+//			urlArray.push(url);
+//			localStorage['adUrlList'] = JSON.stringify(urlArray);*/
+//			//}
+//			//else {
+//				//savedUrls.push(url);
+//				//localStorage['adUrlList'] = //JSON.stringify(savedUrls);
+//			//}
+//			//console.log(savedUrls = //JSON.parse(localStorage.getItem('adUrlList')));
+//            //console.log(savedUrls)/*
+//            localStorage.setItem("savedAdId", jobId);
+//            console.log(localStorage.getItem('savedAdId'))
+//		})
+//	}
+//}
+//*/
 class Controller {
 	constructor(){
 		this.newDOM = newDOM;

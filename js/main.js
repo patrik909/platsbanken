@@ -102,25 +102,25 @@ class Fetch {
         })
     }
 
-    fetchSingleJobPostById(jobId) {
-
+    fetchSingleJobPostById(jobId){
+        
         const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
-
+        
         fetchSingleJobPost.then((response) => {
             return response.json();
         }).then((fetchSingleJobPost) => {
             let url = new URL(window.location.href);
-
-            if (url.href.substr(-10) == 'index.html') {
+            
+            if(url.href.substr(-10) == 'index.html'){
                 url = url.href.slice(0, -10);
                 location.replace(`${url}single_job_post.html?id=${jobId}`);
-            } else {
+            }else{
                 location.replace(`${url}single_job_post.html?id=${jobId}`);
             }
-        }).catch((error) => {
+        }).catch((error) =>{     
             console.log(error);
-        })
-
+       })
+        
     }
 
     fetchBySearch(searchValue) {
@@ -172,7 +172,7 @@ class DOM {
 		const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
 
 		const amountOfJobsContent = `
-            <p> Antal jobb i ${lan}: ${amountOfJobs}
+            <p> Antal jobb i <span>${lan}:</span> ${amountOfJobs}
         `;
 
         amountOfJobsDiv.innerHTML = amountOfJobsContent;
@@ -208,28 +208,27 @@ class DOM {
             if (date) {
                 formatedDate = date.substring(0, 10);
             } else {
-                formatedDate = "Oklart";
+                formatedDate = "Öppen";
             }
 
-            const latestJob = document.createElement('div');
+           const latestJob = document.createElement('div');
             latestJob.classList.add('latestJobs');
             latestJob.innerHTML = `
-
                 <h3>${jobData[i].annonsrubrik}</h3>
                 <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
                 <p>${jobData[i].arbetsplatsnamn}</p>
                 <p>${jobData[i].anstallningstyp}</p>
                 <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
-                <button id="${jobData[i].annonsid}">Läs mer!</button>
+                <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
             `;
 
-            outputListJobs.appendChild(latestJob);
+			outputListJobs.appendChild(latestJob);
 
-            let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
-            readMoreButton.addEventListener('click', function () {
-                newFetch.fetchSingleJobPostById(jobData[i].annonsid);
-            });
-        }
+			let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
+			readMoreButton.addEventListener('click', function () {
+				newFetch.fetchSingleJobPostById(jobData[i].annonsid);
+			});
+		}
 
     }
     
