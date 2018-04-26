@@ -31,6 +31,6 @@ h1{
     font-weight: 600;
 }
 
-.jobUrl{
-    border: 1px solid #A2A0A4; 
+.hidden{
+	display: none;
 }

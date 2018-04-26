@@ -7,13 +7,17 @@ function changeUrl(url, substringToDelete) {
         newUrl = url.href.slice(0, -substringToDelete);
     }
 
-    return newUrl;
+	return newUrl;
 }
 
 
 class Controller {
 
-    filterButton() {
+    constructor() {
+      this.newDOM = newDOM;
+    }
+  
+    filterButton(){
 
         const filterJobsByAmount = document.getElementById('filterJobsByAmount');
         const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
@@ -42,6 +46,10 @@ class Controller {
 
     }
 
+    SavedAdsButtonEventlistener() {
+        const displaySavedAdsButton = document.getElementById('savedAds');
+        displaySavedAdsButton.addEventListener('click', this.newDOM.displaySavedAds)
+    } 
 }
 
 class Fetch {
@@ -157,13 +165,13 @@ class Fetch {
 
 class DOM {
 
-    displayTotalAmoutOfJobs(jobs) {
+	displayTotalAmoutOfJobs(jobs) {
 
-        const amountOfJobsDiv = document.getElementById('amountOfJobs');
-        const lan = jobs.matchningslista.matchningdata[0].lan;
-        const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
+		const amountOfJobsDiv = document.getElementById('amountOfJobs');
+		const lan = jobs.matchningslista.matchningdata[0].lan;
+		const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
 
-        const amountOfJobsContent = `
+		const amountOfJobsContent = `
             <p> Antal jobb i ${lan}: ${amountOfJobs}
         `;
 
@@ -206,6 +214,7 @@ class DOM {
             const latestJob = document.createElement('div');
             latestJob.classList.add('latestJobs');
             latestJob.innerHTML = `
+
                 <h3>${jobData[i].annonsrubrik}</h3>
                 <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
                 <p>${jobData[i].arbetsplatsnamn}</p>
@@ -223,10 +232,26 @@ class DOM {
         }
 
     }
+    
+	displaySavedAds() {
+		var savedAds = JSON.parse(localStorage.getItem('adUrlList'));
+		console.log(savedAds);
+		const savedAdsWrapper = document.createElement('div');
+		savedAdsWrapper.innerHTML = `<ul id="savedAdsList"></ul>`;
+		const mainElement = document.querySelector('main');
+		mainElement.appendChild(savedAdsWrapper);
+		for (let adUrl of savedAds) {
+			let savedAd = document.createElement('li');
+			savedAd.innerHTML = adUrl;
+			let savedAdsList = document.getElementById('savedAdsList');
+			savedAdsList.appendChild(savedAd);
+			
+		}
+	}
 
-    formateDate(date) {
-        console.log(date)
-    }
+	formateDate(date) {
+		console.log(date)
+	}
 
 }
 
@@ -234,6 +259,8 @@ class DOM {
 const newDOM = new DOM;
 const newController = new Controller;
 const newFetch = new Fetch;
+
+newController.SavedAdsButtonEventlistener();
 newFetch.fetchLatestJobsByID(10, 1);
 newFetch.fetchAllCounty();
 newController.filterButton();
