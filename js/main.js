@@ -262,6 +262,7 @@ class DOM {
 	}
     
     paginering(numberOfPages, pageNumber){
+        //Function not done
         const pageNumberDiv = document.getElementById('pageNumber');
         pageNumberDiv.innerHTML=`${pageNumber} av ${numberOfPages}`;
     }
