@@ -43,7 +43,8 @@ h1{
 }
 
 #upperForm button {
-    padding: 5px 15px;
+    padding: 5px 16px;
+    letter-spacing: 1px;
     margin: 0 5px;
     border-radius: 30px;
     border: none;

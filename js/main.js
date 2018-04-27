@@ -52,12 +52,9 @@ class Controller {
       const displaySavedAdsButton = document.getElementById('savedAds');
       displaySavedAdsButton.addEventListener('click', () => {
           let savedAds = JSON.parse(localStorage.getItem('jobList'));
-          newFetch.fetchById(savedAds)
+          newFetch.fetchSavedAds(savedAds)
       })
-                                             
-        //                                     newFetch.fetchById)
-      //  let savedAds = JSON.parse(localStorage.getItem('jobList'));
-    //} 
+        
     }
 }
 
@@ -153,14 +150,13 @@ class Fetch {
         })
     }
   
-    fetchById(saveAds){
+    fetchSavedAds(saveAds){
         
         let jobArray = [];
         for (let adUrl of saveAds) {
-            fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
+                fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
                 return response.json();
             }).then((job) => {
-                //FIXA
                 jobArray.push(job)
                 newDOM.displaySavedAds(jobArray)
             }).catch((error) =>{     
@@ -169,6 +165,7 @@ class Fetch {
             
         }
     }
+    
 }
 
 class DOM {
