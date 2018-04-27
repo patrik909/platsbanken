@@ -225,10 +225,8 @@ class DOM {
             //Sending info to the contructor, which formates the data.
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
             
-            let formatedDate = '';
-            if(date){
-                formatedDate = date.substring(0,10);
-            } else {
+            let formatedDate = date.substring(0,10);
+            if(!date) {
                 formatedDate = 'Öppen';
             }
 
