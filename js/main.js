@@ -10,7 +10,6 @@ function changeUrl(url, substringToDelete) {
 	return newUrl;
 }
 
-
 class Controller {
 
     constructor() {
@@ -19,30 +18,31 @@ class Controller {
   
     filterButton(){
 
-        const filterJobsByAmount = document.getElementById('filterJobsByAmount');
-        const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
-
-        const filterCountyButton = document.getElementById('filterCountyButton');
-        const filterCounty = document.getElementById('filterCounty');
-
-        const searchJobs = document.getElementById('searchJobs');
-        const searchJobsButton = document.getElementById('searchJobsButton');
-
         const filterProfession = document.getElementById('filterProfession');
-        const filterProfessionButton = document.getElementById('filterProfessionButton');
-
-        filterJobsByAmountButton.addEventListener('click', () => {
-            newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
-        })
+        const filterCounty = document.getElementById('filterCounty');
+        const filterJobsByAmount = document.getElementById('filterJobsByAmount');  
+        const searchJobs = document.getElementById('searchJobs');
+        
+        const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
+        const filterCountyButton = document.
+        getElementById('filterCountyButton');
+        const searchJobsButton = document.
+        getElementById('searchJobsButton');
+        const filterProfessionButton = document.
+        getElementById('filterProfessionButton');
+        
+        filterProfessionButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
+        });
         filterCountyButton.addEventListener('click', () => {
-            newFetch.fetchLatestJobsByID(filterJobsByAmount.value, filterCounty.value)
-        })
+            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
+        });
+        filterJobsByAmountButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
+        });
         searchJobsButton.addEventListener('click', () => {
             newFetch.fetchBySearch(searchJobs.value);
-        })
-        filterProfessionButton.addEventListener('click', () => {
-            newFetch.fetchByProfession(filterProfession.value)
-        })
+        });
 
     }
 
@@ -51,26 +51,42 @@ class Controller {
       const displaySavedAdsButton = document.getElementById('savedAds');
       displaySavedAdsButton.addEventListener('click', () => {
           let savedAds = JSON.parse(localStorage.getItem('jobList'));
-          newFetch.fetchById(savedAds)
+          newFetch.fetchSavedAds(savedAds)
       })
-                                             
-        //                                     newFetch.fetchById)
-      //  let savedAds = JSON.parse(localStorage.getItem('jobList'));
-    //} 
+        
     }
 }
 
 class Fetch {
+    
+    fetchLatestJobs(countyID, rows, pageNumber) {
 
-    fetchLatestJobsByID(rows, ID) {
-
-        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${ID}`);
+        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=${pageNumber}&antalrader=${rows}&lanid=${countyID}`);
 
         fetchLatestJobs.then((response) => {
             return response.json();
         }).then((fetchLatestJobs) => {
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
             newDOM.displayListedJobs(fetchLatestJobs);
+            newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
+
+        }).catch((error) => {
+            console.log(error);
+        })
+
+    }
+
+    fetchLatestJobsByParam(professionID, countyID, rows, pageNumber = 1) {
+
+        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=${pageNumber}&antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}`);
+
+        fetchLatestJobs.then((response) => {
+            return response.json();
+        }).then((fetchLatestJobs) => {
+            let option = "matchade";
+            newDOM.displayTotalAmoutOfJobs(fetchLatestJobs, option);
+            newDOM.displayListedJobs(fetchLatestJobs);
+            newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
         }).catch((error) => {
             console.log(error);
         })
@@ -110,27 +126,6 @@ class Fetch {
         })
     }
 
-    fetchSingleJobPostById(jobId){
-        
-        const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
-        
-        fetchSingleJobPost.then((response) => {
-            return response.json();
-        }).then((fetchSingleJobPost) => {
-            let url = new URL(window.location.href);
-            
-            if(url.href.substr(-10) == 'index.html'){
-                url = url.href.slice(0, -10);
-                location.replace(`${url}single_job_post.html?id=${jobId}`);
-            }else{
-                location.replace(`${url}single_job_post.html?id=${jobId}`);
-            }
-        }).catch((error) =>{     
-            console.log(error);
-       })
-        
-    }
-
     fetchBySearch(searchValue) {
 
         const fetchBySearch = fetch(` http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?nyckelord=${searchValue}`);
@@ -156,27 +151,14 @@ class Fetch {
             console.log(error);
         })
     }
-
-    fetchByProfession(professionID) {
-        const fetchProfession = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesomradeid=${professionID}&sida=1&antalrader=20`);
-
-        fetchProfession.then((response) => {
-            return response.json();
-        }).then((profession) => {
-            newDOM.displayListedJobs(profession);
-        }).catch((error) => {
-            console.log(error);
-        })
-    }
   
-    fetchById(saveAds){
+    fetchSavedAds(saveAds){
         
         let jobArray = [];
         for (let adUrl of saveAds) {
-            fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
+                fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
                 return response.json();
             }).then((job) => {
-                //FIXA
                 jobArray.push(job)
                 newDOM.displaySavedAds(jobArray)
             }).catch((error) =>{     
@@ -185,16 +167,17 @@ class Fetch {
             
         }
     }
+    
 }
 
 class DOM {
 
-	displayTotalAmoutOfJobs(jobs) {
+	displayTotalAmoutOfJobs(jobs, option = "") {
 
 		const amountOfJobsDiv = document.getElementById('amountOfJobs');
-		const lan = jobs.matchningslista.matchningdata[0].lan;
+		const county = jobs.matchningslista.matchningdata[0].lan;
 		const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
-		const amountOfJobsContent = `<p> Antal jobb i <span>${lan}:</span> ${amountOfJobs}`;
+		const amountOfJobsContent = `<p> Antal ${option} jobb i <span>${county}:</span> ${amountOfJobs}`;
         
         amountOfJobsDiv.innerHTML=amountOfJobsContent;
         
@@ -226,10 +209,10 @@ class DOM {
             //newDOM.formateDate(jobData[i].sista_ansokningsdag)
             
             let formatedDate = '';
-            if(date){
-                formatedDate = date.substring(0,10);
-            } else {
+            if(!date) {
                 formatedDate = 'Öppen';
+            } else {
+                formatedDate = date.substring(0,10);
             }
 
            const latestJob = document.createElement('div');
@@ -260,15 +243,16 @@ class DOM {
         
         for(let i = 0; i < jobDataLength; i++){
             const listElement = document.createElement('li');
+            let saveAd = jobArray[i].platsannons.annons;
             
-            listElement.innerHTML = `${jobArray[i].platsannons.annons.annonsrubrik}<button id='savedAd${jobArray[i].platsannons.annons.annonsid}'>Läs mer!</button>`;
+            listElement.innerHTML = `${saveAd.annonsrubrik}<button id='savedAd${saveAd.annonsid}'>Läs mer!</button>`;
             
             savedAdsList.appendChild(listElement);
             outputSavedJobs.appendChild(savedAdsList);
         
-			let savedAdButton = document.getElementById(`savedAd${jobArray[i].platsannons.annons.annonsid}`);
+			let savedAdButton = document.getElementById(`savedAd${saveAd.annonsid}`);
 			savedAdButton.addEventListener('click', function () {
-                newFetch.fetchSingleJobPostById(`${jobArray[i].platsannons.annons.annonsid}`);
+                newFetch.fetchSingleJobPostById(`${saveAd.annonsid}`);
 			});
         }
 	}
@@ -276,6 +260,12 @@ class DOM {
 	formateDate(date) {
 		console.log(date)
 	}
+    
+    paginering(numberOfPages, pageNumber){
+        //Function not done
+        const pageNumberDiv = document.getElementById('pageNumber');
+        pageNumberDiv.innerHTML=`${pageNumber} av ${numberOfPages}`;
+    }
 
 }
 
@@ -285,7 +275,7 @@ const newController = new Controller;
 const newFetch = new Fetch;
 
 newController.SavedAdsButtonEventlistener();
-newFetch.fetchLatestJobsByID(10, 1);
+newFetch.fetchLatestJobs(1, 10, 1);
 newFetch.fetchAllCounty();
 newController.filterButton();
 newFetch.fetchAllProfessions();
