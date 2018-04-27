@@ -258,15 +258,16 @@ class DOM {
         
         for(let i = 0; i < jobDataLength; i++){
             const listElement = document.createElement('li');
+            let saveAd = jobArray[i].platsannons.annons;
             
-            listElement.innerHTML = `${jobArray[i].platsannons.annons.annonsrubrik}<button id='savedAd${jobArray[i].platsannons.annons.annonsid}'>Läs mer!</button>`;
+            listElement.innerHTML = `${saveAd.annonsrubrik}<button id='savedAd${saveAd.annonsid}'>Läs mer!</button>`;
             
             savedAdsList.appendChild(listElement);
             outputSavedJobs.appendChild(savedAdsList);
         
-			let savedAdButton = document.getElementById(`savedAd${jobArray[i].platsannons.annons.annonsid}`);
+			let savedAdButton = document.getElementById(`savedAd${saveAd.annonsid}`);
 			savedAdButton.addEventListener('click', function () {
-                newFetch.fetchSingleJobPostById(`${jobArray[i].platsannons.annons.annonsid}`);
+                newFetch.fetchSingleJobPostById(`${saveAd.annonsid}`);
 			});
         }
 	}
