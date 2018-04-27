@@ -10,7 +10,6 @@ function changeUrl(url, substringToDelete) {
 	return newUrl;
 }
 
-
 class Controller {
 
     constructor() {
@@ -52,35 +51,34 @@ class Controller {
       const displaySavedAdsButton = document.getElementById('savedAds');
       displaySavedAdsButton.addEventListener('click', () => {
           let savedAds = JSON.parse(localStorage.getItem('jobList'));
-          newFetch.fetchById(savedAds)
+          newFetch.fetchSavedAds(savedAds)
       })
-                                             
-        //                                     newFetch.fetchById)
-      //  let savedAds = JSON.parse(localStorage.getItem('jobList'));
-    //} 
+        
     }
 }
 
 class Fetch {
     
-    fetchLatestJobs(countyID = 1, rows = 10) {
+    fetchLatestJobs(countyID = 1, rows = 10, pageNumber = 1) {
 
-        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${countyID}`);
+        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=${pageNumber}&antalrader=${rows}&lanid=${countyID}`);
 
         fetchLatestJobs.then((response) => {
             return response.json();
         }).then((fetchLatestJobs) => {
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs);
             newDOM.displayListedJobs(fetchLatestJobs);
+            newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
+
         }).catch((error) => {
             console.log(error);
         })
 
     }
 
-    fetchLatestJobsByParam(professionID, countyID, rows) {
+    fetchLatestJobsByParam(professionID, countyID, rows, pageNumber = 1) {
 
-        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}`);
+        const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=${pageNumber}&antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}`);
 
         fetchLatestJobs.then((response) => {
             return response.json();
@@ -88,6 +86,7 @@ class Fetch {
             let option = "matchade";
             newDOM.displayTotalAmoutOfJobs(fetchLatestJobs, option);
             newDOM.displayListedJobs(fetchLatestJobs);
+            newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
         }).catch((error) => {
             console.log(error);
         })
@@ -153,14 +152,13 @@ class Fetch {
         })
     }
   
-    fetchById(saveAds){
+    fetchSavedAds(saveAds){
         
         let jobArray = [];
         for (let adUrl of saveAds) {
-            fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
+                fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
                 return response.json();
             }).then((job) => {
-                //FIXA
                 jobArray.push(job)
                 newDOM.displaySavedAds(jobArray)
             }).catch((error) =>{     
@@ -169,6 +167,7 @@ class Fetch {
             
         }
     }
+    
 }
 
 class DOM {
@@ -176,9 +175,9 @@ class DOM {
 	displayTotalAmoutOfJobs(jobs, option = "") {
 
 		const amountOfJobsDiv = document.getElementById('amountOfJobs');
-		const lan = jobs.matchningslista.matchningdata[0].lan;
+		const county = jobs.matchningslista.matchningdata[0].lan;
 		const amountOfJobs = jobs.matchningslista.antal_platsannonser_exakta;
-		const amountOfJobsContent = `<p> Antal ${option} jobb i <span>${lan}:</span> ${amountOfJobs}`;
+		const amountOfJobsContent = `<p> Antal ${option} jobb i <span>${county}:</span> ${amountOfJobs}`;
         
         amountOfJobsDiv.innerHTML=amountOfJobsContent;
         
@@ -261,6 +260,12 @@ class DOM {
 	formateDate(date) {
 		console.log(date)
 	}
+    
+    paginering(numberOfPages, pageNumber){
+        //Function not done
+        const pageNumberDiv = document.getElementById('pageNumber');
+        pageNumberDiv.innerHTML=`${pageNumber} av ${numberOfPages}`;
+    }
 
 }
 
