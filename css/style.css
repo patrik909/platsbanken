@@ -6,6 +6,7 @@
 
 body {
     padding: 0;
+    padding-bottom: 150px;
     margin: 0;
     font-family: 'Lato', sans-serif;
     font-size: 14px;
@@ -134,6 +135,27 @@ main{
 
 .latestJobs button:hover {
     background: #565656;
+}
+
+#pagineringWrapper{
+    display: flex;
+    align-items: center;
+    margin: 20px 0px;
+}
+
+#pagineringWrapper button{
+    padding: 3px 5px;
+    background: black;
+    border: none;
+    border-radius: 5px;
+}
+
+#pagineringWrapper button img {
+    height: 15px;
+}
+
+#pageNumber{
+    padding: 0 20px;
 }
 
 #savedAds {
