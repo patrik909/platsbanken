@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cucumber-js"
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,15 @@
   },
   "homepage": "https://github.com/patrik909/platsbanken#readme",
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chromedriver": "^2.38.2",
+    "cucumber": "^4.2.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }

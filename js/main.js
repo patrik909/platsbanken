@@ -62,7 +62,7 @@ class Controller {
 
 class Fetch {
 
-    fetchLatestJobsByID(rows = 10, ID = 1) {
+    fetchLatestJobsByID(rows, ID) {
 
         const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=${rows}&lanid=${ID}`);
 
