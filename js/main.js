@@ -3,125 +3,123 @@ function changeUrl(url, substringToDelete) {
 	let substringLength = substringToDelete.length;
 	let newUrl = '';
 
-    if (url.href.substr(-substringLength) === substringToDelete) {
-        newUrl = url.href.slice(0, -substringToDelete);
-    }
+	if (url.href.substr(-substringLength) === substringToDelete) {
+		newUrl = url.href.slice(0, -substringToDelete);
+	}
 
 	return newUrl;
 }
 
 class Controller {
-
-<<<<<<< HEAD
 	constructor() {
-      this.newDOM = newDOM;
-    }
-    
-    filterElements(){
-        const filterProfession = document.getElementById('filterProfession');
-        const filterCounty = document.getElementById('filterCounty');
-        const filterJobsByAmount = document.getElementById('filterJobsByAmount');  
-        const searchJobs = document.getElementById('searchJobs');
-        
-        const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
-        const filterCountyButton = document.
-        getElementById('filterCountyButton');
-        const searchJobsButton = document.
-        getElementById('searchJobsButton');
-        const filterProfessionButton = document.
-        getElementById('filterProfessionButton');
-        
-        const autoCompleteOutput = document.getElementById('autoCompleteOutput');
-    }
-  
-    filterButtons(){
+		this.newDOM = newDOM;
+	}
 
-        this.filterElements();
-        
-        filterProfessionButton.addEventListener('click', () => {
-            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
-        });
-        filterCountyButton.addEventListener('click', () => {
-            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
-        });
-        filterJobsByAmountButton.addEventListener('click', () => {
-            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
-        });
+	filterElements() {
+		const filterProfession = document.getElementById('filterProfession');
+		const filterCounty = document.getElementById('filterCounty');
+		const filterJobsByAmount = document.getElementById('filterJobsByAmount');
+		const searchJobs = document.getElementById('searchJobs');
 
-    }
-    
-    searchField(){  
-        
-        this.filterElements();
-        
-        searchJobs.addEventListener('keyup', () => {
-            if (searchJobs.value.length < 3) {
-                autoCompleteOutput.innerHTML='<p id="autoCompleteMessage">Skriv 3 tecken för att få upp sökförslag</p>';
-            } else if (searchJobs.value.length === 3) {
-                autoCompleteOutput.innerHTML='';
-                newFetch.fetchAutoCompleteWords(searchJobs.value);
-            } else {
-                // Eller sortera bort förslag
-                newFetch.fetchBySearch(searchJobs.value)
-            }
-        });   
-    }
+		const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
+		const filterCountyButton = document.
+		getElementById('filterCountyButton');
+		const searchJobsButton = document.
+		getElementById('searchJobsButton');
+		const filterProfessionButton = document.
+		getElementById('filterProfessionButton');
 
-    autoCompleteSearch(){
-        
-        const searchListItems = document.getElementsByClassName('searchDraft');
-        
-        for (let draftItem of searchListItems) {
-            draftItem.addEventListener('click', function(){
-                autoCompleteOutput.innerHTML='';
-                newFetch.fetchBySearch(this.id); 
-            });
-        }
-        document.addEventListener('click', function (event){
-            autoCompleteOutput.innerHTML=""
-        })
-        
-    }
+		const autoCompleteOutput = document.getElementById('autoCompleteOutput');
+	}
 
-    SavedAdsButtonEventlistener() {
+	filterButtons() {
 
-        const displaySavedAdsButton = document.getElementById('savedAds');
-        displaySavedAdsButton.addEventListener('click', () => {
-            let savedAds = JSON.parse(localStorage.getItem('jobList'));
-            newFetch.fetchSavedAds(savedAds)
-        })
-        
-    }
+		this.filterElements();
+
+		filterProfessionButton.addEventListener('click', () => {
+			this.newDOM.displayLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value, 1);
+		});
+		filterCountyButton.addEventListener('click', () => {
+			this.newDOM.displayLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value, 1);
+		});
+		filterJobsByAmountButton.addEventListener('click', () => {
+			this.newDOM.displayLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value, 1);
+		});
+
+	}
+
+	searchField() {
+
+		this.filterElements();
+
+		searchJobs.addEventListener('keyup', () => {
+			if (searchJobs.value.length < 3) {
+				autoCompleteOutput.innerHTML = '<p id="autoCompleteMessage">Skriv 3 tecken för att få upp sökförslag</p>';
+			} else if (searchJobs.value.length === 3) {
+				autoCompleteOutput.innerHTML = '';
+				newFetch.fetchAutoCompleteWords(searchJobs.value);
+			} else {
+				// Eller sortera bort förslag
+				newFetch.fetchBySearch(searchJobs.value)
+			}
+		});
+	}
+
+	autoCompleteSearch() {
+
+		const searchListItems = document.getElementsByClassName('searchDraft');
+
+		for (let draftItem of searchListItems) {
+			draftItem.addEventListener('click', function () {
+				autoCompleteOutput.innerHTML = '';
+				newFetch.fetchBySearch(this.id);
+			});
+		}
+		document.addEventListener('click', function (event) {
+			autoCompleteOutput.innerHTML = ""
+		})
+
+	}
+
+	SavedAdsButtonEventlistener() {
+
+		const displaySavedAdsButton = document.getElementById('savedAds');
+		displaySavedAdsButton.addEventListener('click', () => {
+			let savedAds = JSON.parse(localStorage.getItem('jobList'));
+			newFetch.fetchSavedAds(savedAds)
+		})
+
+	}
 }
 
 class Fetch {
 
-	fetchLatestJobs(urlEnding) {
-		return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=10&lanid=1`) /*(`http://api.arbetsformedlingen.se/af/v0/${urlEnding}`)*/
+	fetchLatestJobs() {
+		return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=1&antalrader=10&lanid=1`)
 			.then((response) => response.json())
 			.then((jobList) => {
 				const latestJobs = jobList;
-				console.log(latestJobs);
 				return latestJobs;
 			}).catch((error) => {
 				console.log(error);
 			})
 	}
 
-	fetchLatestJobsByParam(professionID, countyID, rows, pageNumber = 1) {
+	fetchLatestJobsByParam(professionID, countyID, rows, pageNumber) {
+		return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=${pageNumber}&antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}`)
+			.then((response) => response.json())
+			.then((jobList) => {
+				let option = "matchade";
+				const latestJobs = jobList;
+				console.log(latestJobs);
+				return latestJobs;
 
-		const fetchLatestJobs = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?sida=${pageNumber}&antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}`);
-
-		fetchLatestJobs.then((response) => {
-			return response.json();
-		}).then((fetchLatestJobs) => {
-			let option = "matchade";
-			//newDOM.displayTotalAmountOfJobs(fetchLatestJobs, option);
-			//newDOM.displayListedJobs(fetchLatestJobs);
-			//newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
-		}).catch((error) => {
-			console.log(error);
-		})
+				//newDOM.displayTotalAmountOfJobs(fetchLatestJobs, option);
+				//newDOM.displayListedJobs(fetchLatestJobs);
+				//newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
+			}).catch((error) => {
+				console.log(error);
+			})
 
 	}
 
@@ -275,7 +273,6 @@ class DOM {
             `;
 
 			outputListJobs.appendChild(latestJob);
-			console.log(latestJob);
 
 			let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
 			readMoreButton.addEventListener('click', () => {
@@ -284,6 +281,11 @@ class DOM {
 		}
 		const numberOfPages = 10;
 		return numberOfPages;
+	}
+
+	displayLatestJobsByParam(professionID, countyID, rows, pageNumber) {
+		console.log(professionID);
+		this.fetch.fetchLatestJobsByParam(professionID, countyID, rows, pageNumber).then(this.displayListed);
 	}
 
 	displaySavedAds(jobArray) {
