@@ -27,12 +27,13 @@ h1{
     font-weight: 900;
     letter-spacing: 10px;
     font-size: 4em;
+    color: #00358c;
 }
 
 /* ---- SEARCHFIELD STYLING ---- */
 
 #searchForm {
-    background: black;
+    background: #00358c;
     padding: 20px;
     width: 100vw;
 }
@@ -54,6 +55,7 @@ h1{
 
 #upperForm select {
     font-size: 1em;
+    letter-spacing: 1px;
     background: white;
     border: none;
     margin: 0 5px;
@@ -84,6 +86,40 @@ h1{
 
 #lowerForm button img {
     height: 20px;
+}
+
+#autoCompleteOutput{
+    background: rgba(255,255,255,0.9);
+    position: absolute;
+    width: 750px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+#autoCompleteOutput ul {
+    padding: 20px;
+    margin: 0;
+}
+
+#autoCompleteMessage{
+    padding: 10px 30px;
+    text-decoration: underline;
+}
+
+.searchDraft{
+    padding: 10px;
+    list-style-type: none;
+}
+.searchDraft span {
+    color: #565656;
+    font-weight: 900;
+}
+.searchDraft:hover{
+    background: rgba(225,225,225); 
 }
 
 /* ---- MAIN STYLING ---- */
@@ -125,7 +161,7 @@ main{
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 700;
-    background: black;
+    background: #00358c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -134,7 +170,7 @@ main{
 }
 
 .latestJobs button:hover {
-    background: #565656;
+    background: #0049c1;
 }
 
 #pagineringWrapper{
@@ -145,9 +181,14 @@ main{
 
 #pagineringWrapper button{
     padding: 3px 5px;
-    background: black;
+    background: #00358c;
     border: none;
     border-radius: 5px;
+    transition: 200ms;
+}
+
+#pagineringWrapper button:hover{
+    background: #0049c1;
 }
 
 #pagineringWrapper button img {
@@ -159,7 +200,7 @@ main{
 }
 
 #savedAds {
-    background: black;
+    background: #00358c;
     color: white;
     padding: 10px 20px;
     font-weight: 700;
@@ -167,4 +208,9 @@ main{
     text-transform: uppercase;
     border-radius: 5px;
     border: none;
+    transition: 200ms;
+}
+
+#savedAds:hover{
+    background: #0049c1; 
 }
