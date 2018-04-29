@@ -3,83 +3,95 @@ function changeUrl(url, substringToDelete) {
 	let substringLength = substringToDelete.length;
 	let newUrl = '';
 
-	if (url.href.substr(-substringLength) == substringToDelete) {
-		newUrl = url.href.slice(0, -substringToDelete);
-	}
+    if (url.href.substr(-substringLength) === substringToDelete) {
+        newUrl = url.href.slice(0, -substringToDelete);
+    }
 
 	return newUrl;
 }
 
 class Controller {
 
-	filterBy() {
-		const filterProfession = document.getElementById('filterProfession');
-		const filterCounty = document.getElementById('filterCounty');
-		const filterJobsByAmount = document.getElementById('filterJobsByAmount');
-		const searchJobs = document.getElementById('searchJobs');
-	}
+<<<<<<< HEAD
+	constructor() {
+      this.newDOM = newDOM;
+    }
+    
+    filterElements(){
+        const filterProfession = document.getElementById('filterProfession');
+        const filterCounty = document.getElementById('filterCounty');
+        const filterJobsByAmount = document.getElementById('filterJobsByAmount');  
+        const searchJobs = document.getElementById('searchJobs');
+        
+        const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
+        const filterCountyButton = document.
+        getElementById('filterCountyButton');
+        const searchJobsButton = document.
+        getElementById('searchJobsButton');
+        const filterProfessionButton = document.
+        getElementById('filterProfessionButton');
+        
+        const autoCompleteOutput = document.getElementById('autoCompleteOutput');
+    }
+  
+    filterButtons(){
 
-	filterButtons() {
+        this.filterElements();
+        
+        filterProfessionButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
+        });
+        filterCountyButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
+        });
+        filterJobsByAmountButton.addEventListener('click', () => {
+            newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
+        });
 
-		this.filterBy();
-		const filterButtons = document.getElementsByClassName('filterButton');
+    }
+    
+    searchField(){  
+        
+        this.filterElements();
+        
+        searchJobs.addEventListener('keyup', () => {
+            if (searchJobs.value.length < 3) {
+                autoCompleteOutput.innerHTML='<p id="autoCompleteMessage">Skriv 3 tecken för att få upp sökförslag</p>';
+            } else if (searchJobs.value.length === 3) {
+                autoCompleteOutput.innerHTML='';
+                newFetch.fetchAutoCompleteWords(searchJobs.value);
+            } else {
+                // Eller sortera bort förslag
+                newFetch.fetchBySearch(searchJobs.value)
+            }
+        });   
+    }
 
-		for (let filterButton of filterButtons) {
-			filterButton.addEventListener('click', () => {
-				let pageNumber = 1;
-				let professionID = filterProfession.value;
-				let countyID = filterCounty.value;
-				let rows = filterJobsByAmount.value;
-				let urlEnding = `/platsannonser/matchning?antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}&sida=${pageNumber}`;
+    autoCompleteSearch(){
+        
+        const searchListItems = document.getElementsByClassName('searchDraft');
+        
+        for (let draftItem of searchListItems) {
+            draftItem.addEventListener('click', function(){
+                autoCompleteOutput.innerHTML='';
+                newFetch.fetchBySearch(this.id); 
+            });
+        }
+        document.addEventListener('click', function (event){
+            autoCompleteOutput.innerHTML=""
+        })
+        
+    }
 
-				//newFetch.fetchJobs(urlEnding, pageNumber);
-			})
-		}
+    SavedAdsButtonEventlistener() {
 
-		searchJobsButton.addEventListener('click', () => {
-			//newFetch.fetchBySearch(searchJobs.value);
-		});
-	}
-
-	SavedAdsButtonEventlistener() {
-
-		const displaySavedAdsButton = document.getElementById('savedAds');
-		displaySavedAdsButton.addEventListener('click', () => {
-			let savedAds = JSON.parse(localStorage.getItem('jobList'));
-			newFetch.fetchSavedAds(savedAds)
-		})
-
-	}
-
-	paginationButtons(numberOfPages, pageNumber = 1) {
-		const previousPage = document.getElementById('previousPage');
-		const nextPage = document.getElementById('nextPage');
-
-		//this.filterBy();
-
-		previousPage.addEventListener('click', () => {
-			if (pageNumber > 1) {
-				pageNumber--
-								let professionID = filterProfession.value;
-								let countyID = filterCounty.value;
-								let rows = filterJobsByAmount.value;
-								let urlEnding = `/platsannonser/matchning?antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}&sida=${pageNumber}`;
-
-				//newFetch.fetchJobs(urlEnding, pageNumber);
-			}
-		});
-		nextPage.addEventListener('click', () => {
-			//if(pageNumber < numberOfPages){
-			pageNumber++
-			let professionID = filterProfession.value;
-			let countyID = filterCounty.value;
-			let rows = filterJobsByAmount.value;
-			let urlEnding = `/platsannonser/matchning?antalrader=${rows}&lanid=${countyID}&yrkesomradeid=${professionID}&sida=${pageNumber}`;
-
-			//newFetch.fetchJobs(urlEnding, pageNumber);
-			//}
-		});
-	}
+        const displaySavedAdsButton = document.getElementById('savedAds');
+        displaySavedAdsButton.addEventListener('click', () => {
+            let savedAds = JSON.parse(localStorage.getItem('jobList'));
+            newFetch.fetchSavedAds(savedAds)
+        })
+        
+    }
 }
 
 class Fetch {
@@ -187,7 +199,6 @@ class Fetch {
 
 		}
 	}
-
 }
 
 class DOM {
