@@ -113,10 +113,6 @@ class Fetch {
 				const latestJobs = jobList;
 				console.log(latestJobs);
 				return latestJobs;
-
-				//newDOM.displayTotalAmountOfJobs(fetchLatestJobs, option);
-				//newDOM.displayListedJobs(fetchLatestJobs);
-				//newDOM.paginering(fetchLatestJobs.matchningslista.antal_sidor, pageNumber);
 			}).catch((error) => {
 				console.log(error);
 			})
