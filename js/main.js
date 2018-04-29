@@ -3,7 +3,7 @@ function changeUrl(url, substringToDelete) {
     let substringLength = substringToDelete.length;
     let newUrl = '';
 
-    if (url.href.substr(-substringLength) == substringToDelete) {
+    if (url.href.substr(-substringLength) === substringToDelete) {
         newUrl = url.href.slice(0, -substringToDelete);
     }
 
@@ -15,9 +15,8 @@ class Controller {
     constructor() {
       this.newDOM = newDOM;
     }
-  
-    filterButton(){
-
+    
+    filterElements(){
         const filterProfession = document.getElementById('filterProfession');
         const filterCounty = document.getElementById('filterCounty');
         const filterJobsByAmount = document.getElementById('filterJobsByAmount');  
@@ -30,6 +29,13 @@ class Controller {
         getElementById('searchJobsButton');
         const filterProfessionButton = document.
         getElementById('filterProfessionButton');
+        
+        const autoCompleteOutput = document.getElementById('autoCompleteOutput');
+    }
+  
+    filterButtons(){
+
+        this.filterElements();
         
         filterProfessionButton.addEventListener('click', () => {
             newFetch.fetchLatestJobsByParam(filterProfession.value, filterCounty.value, filterJobsByAmount.value);
@@ -44,8 +50,8 @@ class Controller {
     }
     
     searchField(){  
-        const searchJobs = document.getElementById('searchJobs');
-        const autoCompleteOutput = document.getElementById('autoCompleteOutput');
+        
+        this.filterElements();
         
         searchJobs.addEventListener('keyup', () => {
             if (searchJobs.value.length < 3) {
@@ -78,11 +84,11 @@ class Controller {
 
     SavedAdsButtonEventlistener() {
 
-      const displaySavedAdsButton = document.getElementById('savedAds');
-      displaySavedAdsButton.addEventListener('click', () => {
-          let savedAds = JSON.parse(localStorage.getItem('jobList'));
-          newFetch.fetchSavedAds(savedAds)
-      })
+        const displaySavedAdsButton = document.getElementById('savedAds');
+        displaySavedAdsButton.addEventListener('click', () => {
+            let savedAds = JSON.parse(localStorage.getItem('jobList'));
+            newFetch.fetchSavedAds(savedAds)
+        })
         
     }
 }
@@ -143,11 +149,11 @@ class Fetch {
 
     }
 
-    fetchAllCounty() {
+    fetchAllCounties() {
 
-        const fetchAllCounty = fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan`);
+        const fetchAllCounties = fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan`);
 
-        fetchAllCounty.then((response) => {
+        fetchAllCounties.then((response) => {
             return response.json();
         }).then((allCounties) => {
             newDOM.displayOptions(allCounties.soklista.sokdata, filterCounty);
@@ -341,7 +347,7 @@ const newFetch = new Fetch;
 
 newController.SavedAdsButtonEventlistener();
 newFetch.fetchLatestJobs(1, 10, 1);
-newFetch.fetchAllCounty();
-newController.filterButton();
+newFetch.fetchAllCounties();
+newController.filterButtons();
 newFetch.fetchAllProfessions();
 newController.searchField();
