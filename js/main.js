@@ -351,3 +351,31 @@ newFetch.fetchAllCounties();
 newController.filterButtons();
 newFetch.fetchAllProfessions();
 newController.searchField();
+
+function fetchthis(countyID) {
+
+        const fetchAllCounties = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/kommuner?lanid=${countyID}`);
+
+        fetchAllCounties.then((response) => {
+            return response.json();
+        }).then((allTowns) => {
+            displayTowns(allTowns)
+        }).catch((error) => {
+            console.log(error);
+        })
+}
+fetchthis(1)
+
+function displayTowns(towns){
+    
+    const filterByTown = document.getElementById('filterByTown');
+    let townie = '';
+    for (let town of towns.soklista.sokdata){
+        townie += `
+            <input id="${town.id}" type="checkbox">${town.namn}
+        `;
+    }
+    console.log(filterByTown)
+    console.log(townie)
+    filterByTown.innerHTML=townie;
+}
