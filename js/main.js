@@ -11,6 +11,7 @@ function changeUrl(url, substringToDelete) {
 }
 
 class Controller {
+    
 	constructor() {
 		this.newDOM = newDOM;
 	}
@@ -145,10 +146,10 @@ class Fetch {
 }
 
 class DOM {
+    
 	constructor() {
 		this.fetch = new Fetch();
 	}
-
 
 //	displayTotalAmountOfJobs( /*jobs, option = ""*/ ) {
 //
@@ -226,10 +227,8 @@ class DOM {
 		const jobDataLength = jobData.length;
 
 		for (let i = 0; i < jobDataLength; i++) {
+            
 			const date = jobData[i].sista_ansokningsdag;
-			//Sending info to the contructor, which formates the data.
-			//newDOM.formateDate(jobData[i].sista_ansokningsdag)
-
 			let formatedDate = '';
 			if (!date) {
 				formatedDate = 'Öppen';
@@ -247,16 +246,13 @@ class DOM {
                 <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
                 <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
             `;
-
-			outputListJobs.appendChild(latestJob);
+            outputListJobs.appendChild(latestJob);
 
 			let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
 			readMoreButton.addEventListener('click', () => {
 				newFetch.fetchSingleJobPostById(jobData[i].annonsid);
 			});
 		}
-		const numberOfPages = 10;
-		return numberOfPages;
 	}
 
 //	displayLatestJobsByParam(professionID, countyID, rows, pageNumber) {
@@ -285,10 +281,6 @@ class DOM {
 		}
 	}
 
-//	formateDate(date) {
-//		console.log(date)
-//	}
-//
 //	displayPageNumber() {
 //		this.fetch.fetchList().then(this.paginering);
 //	}
