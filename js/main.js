@@ -14,19 +14,30 @@ class Init {
     
     frontPage(){
         
+        if(url.indexOf("?") > -1) {
+            let sub1 = url.indexOf("?")
+            let sub2 = url.length
+            let urlEnding = url.substring(sub1, sub2)
+            
+            newController.addToUrl(urlEnding);
+            newFetch.fetchList(`/platsannonser/matchning${urlEnding}`).
+            then(newDOM.displayListed);
+
+        } else {
+            newController.addToUrl(`?sida=1&antalrader=10&lanid=1`);
+            newFetch.fetchList(`/platsannonser/matchning?sida=1&antalrader=10&lanid=1`).
+            then(newDOM.displayListed);
+        }
+        
         newController.SavedAdsButtonEventlistener();
         newController.filterButtons();
         newController.searchField();
+        newController.shareListing();
         
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
         then(newDOM.displayOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).
         then(newDOM.displayOptions);
-        
-        window.history.replaceState(null, null, "?sok=false&sida=1&antalrader=10&lanid=1");
-        
-        newFetch.fetchList(`/platsannonser/matchning?sok=false&sida=1&antalrader=10&lanid=1`).
-        then(newDOM.displayListed);
         
     }
     
@@ -37,6 +48,10 @@ class Controller {
 	constructor() {
 		this.newDOM = newDOM;
 	}
+    
+    addToUrl(newUrlEnding){
+        window.history.replaceState(null, null, newUrlEnding);
+    }
 
 	filterElements() {
 		const filterProfession = document.getElementById('filterProfession');
@@ -60,12 +75,18 @@ class Controller {
 		this.filterElements();
 
 		filterProfessionButton.addEventListener('click', () => {
+            newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
+            
             newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed);
 		});
 		filterCountyButton.addEventListener('click', () => {
+            newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
+            
             newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed)
 		});
 		filterJobsByAmountButton.addEventListener('click', () => {
+            newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
+            
             newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed)
 		});
 
@@ -105,6 +126,17 @@ class Controller {
 		})
 
 	}
+    
+    shareListing(){
+        const shareListingButton = document.
+        getElementById('shareListingButton');
+        const outputShareListing = document.
+        getElementById('outputShareListing');
+        
+        shareListingButton.addEventListener('click', function (){
+            outputShareListing.innerHTML=window.location.href
+        });
+    }
 
 	SavedAdsButtonEventlistener() {
 
@@ -174,20 +206,12 @@ class DOM {
 	}
 
 	displayAmount(latestJobs) {
-        const searched = url.searchParams.get('sok')
-        console.log(searched)
-        let match = '';
-//        if(searched === true){
-//            match = 'matchade';
-//        } else {
-//            match = '';
-//        }
 
 		const amountOfJobsDiv = document.getElementById('amountOfJobs');
 		const county = latestJobs.matchningslista.matchningdata[0].lan;
 		const amountOfJobs = latestJobs.matchningslista.antal_platsannonser_exakta;
 
-		const amountOfJobsContent = `<p> Antal ${match} jobb i <span>${county}:</span> ${amountOfJobs}`;
+		const amountOfJobsContent = `<p> Antal jobb i <span>${county}:</span> ${amountOfJobs}`;
 		amountOfJobsDiv.innerHTML = amountOfJobsContent;
 
 	}
@@ -236,60 +260,50 @@ class DOM {
         }
     }
 
-//	displayLatestJobs(urlEnding) {
-//		const pagination = new Controller();
-//		this.fetch.fetchList(urlEnding).then(this.displayListed)//.then(pagination.paginationButtons);
-//
-//	}
-
 	displayListed(latestJobs) {
 
         const outputListJobs = document.getElementById('outputListJobs');
         
         if(latestJobs.matchningslista.antal_platsannonser){
-        newDOM.displayAmount(latestJobs);
+            newDOM.displayAmount(latestJobs);
 
-		const jobData = latestJobs.matchningslista.matchningdata;
-		let listedJobs = '';
-		outputListJobs.innerHTML = '';
-		const jobDataLength = jobData.length;
+            const jobData = latestJobs.matchningslista.matchningdata;
+            let listedJobs = '';
+            outputListJobs.innerHTML = '';
+            const jobDataLength = jobData.length;
 
-		for (let i = 0; i < jobDataLength; i++) {
-            
-			const date = jobData[i].sista_ansokningsdag;
-			let formatedDate = '';
-			if (!date) {
-				formatedDate = 'Öppen';
-			} else {
-				formatedDate = date.substring(0, 10);
-			}
+            for (let i = 0; i < jobDataLength; i++) {
 
-			const latestJob = document.createElement('div');
-			latestJob.classList.add('latestJobs');
-			latestJob.innerHTML = `
-                <h3>${jobData[i].annonsrubrik}</h3>
-                <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
-                <p>${jobData[i].arbetsplatsnamn}</p>
-                <p>${jobData[i].anstallningstyp}</p>
-                <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
-                <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
-            `;
-            outputListJobs.appendChild(latestJob);
+                const date = jobData[i].sista_ansokningsdag;
+                let formatedDate = '';
+                if (!date) {
+                    formatedDate = 'Öppen';
+                } else {
+                    formatedDate = date.substring(0, 10);
+                }
 
-			let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
-			readMoreButton.addEventListener('click', () => {
-				newFetch.fetchSingleJobPostById(jobData[i].annonsid);
-			});
-		}
+                const latestJob = document.createElement('div');
+                latestJob.classList.add('latestJobs');
+                latestJob.innerHTML = `
+                    <h3>${jobData[i].annonsrubrik}</h3>
+                    <p><span>${jobData[i].yrkesbenamning}</span> - ${jobData[i].kommunnamn}</p>
+                    <p>${jobData[i].arbetsplatsnamn}</p>
+                    <p>${jobData[i].anstallningstyp}</p>
+                    <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
+                    <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
+                `;
+                outputListJobs.appendChild(latestJob);
+
+                let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
+                readMoreButton.addEventListener('click', () => {
+                    newFetch.fetchSingleJobPostById(jobData[i].annonsid);
+                });
+            }
         } else {
             outputListJobs.innerHTML='Inga matchade jobb';
         }
 	}
-
-//	displayLatestJobsByParam(professionID, countyID, rows, pageNumber) {
-//		this.fetch.fetchLatestJobsByParam(professionID, countyID, rows, pageNumber).then(this.displayListed);
-//	}
-
+    
 	displaySavedAds(jobArray) {
 		const outputSavedJobs = document.getElementById('outputSavedJobs');
 		outputSavedJobs.innerHTML = '';
@@ -324,17 +338,11 @@ class DOM {
 
 }
 
+const url = window.location.href
 const newDOM = new DOM;
 const newController = new Controller;
 const newFetch = new Fetch;
 const newInit = new Init;
-const url = new URL(window.location.href);
-
-//newDOM.displayTotalAmountOfJobs();
-//newDOM.displayPageNumber();
-//newDOM.displayOptions(allCounties.soklista.sokdata, filterCounty)
 
 //Starts fetch when entering the homepage
 newInit.frontPage();
-//lägg till:
-//window.history.replaceState(null, null, "?sok=false&sida=1&antalrader=10&lanid=1");

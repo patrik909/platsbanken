@@ -199,6 +199,22 @@ main{
     padding: 0 20px;
 }
 
+#shareListingButton {
+    background: #00358c;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border: none;
+    transition: 200ms;
+}
+
+#shareListingButton:hover{
+    background: #0049c1; 
+}
+
 #savedAds {
     background: #00358c;
     color: white;
