@@ -10,6 +10,28 @@ function changeUrl(url, substringToDelete) {
 	return newUrl;
 }
 
+class Init {
+    
+    frontPage(){
+        
+        newController.SavedAdsButtonEventlistener();
+        newController.filterButtons();
+        newController.searchField();
+        
+        newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
+        then(newDOM.displayOptions);
+        newFetch.fetchList(`/arbetsformedling/soklista/lan`).
+        then(newDOM.displayOptions);
+        
+        window.history.replaceState(null, null, "?sok=false&sida=1&antalrader=10&lanid=1");
+        
+        newFetch.fetchList(`/platsannonser/matchning?sok=false&sida=1&antalrader=10&lanid=1`).
+        then(newDOM.displayListed);
+        
+    }
+    
+}
+
 class Controller {
     
 	constructor() {
@@ -38,7 +60,7 @@ class Controller {
 		this.filterElements();
 
 		filterProfessionButton.addEventListener('click', () => {
-            newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed)
+            newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed);
 		});
 		filterCountyButton.addEventListener('click', () => {
             newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed)
@@ -151,22 +173,24 @@ class DOM {
 		this.fetch = new Fetch();
 	}
 
-//	displayTotalAmountOfJobs( /*jobs, option = ""*/ ) {
-//
-//		this.fetch.fetchList().then(this.displayAmount);
-//	}
+	displayAmount(latestJobs) {
+        const searched = url.searchParams.get('sok')
+        console.log(searched)
+        let match = '';
+//        if(searched === true){
+//            match = 'matchade';
+//        } else {
+//            match = '';
+//        }
 
-//	displayAmount(latestJobs) {
-//		const amountOfJobsDiv = document.getElementById('amountOfJobs');
-//		const latestJobsList = latestJobs.matchningslista.matchningdata[0].lan;
-//		const amountOfJobs = latestJobs.matchningslista.antal_platsannonser_exakta;
-//
-//		//const amountOfJobsContent = `<p> Antal ${option} jobb i <span>${county}:</span> ${amountOfJobs}`;
-//
-//		//amountOfJobsDiv.innerHTML = amountOfJobsContent;
-//		amountOfJobsDiv.innerHTML = amountOfJobs;
-//
-//	}
+		const amountOfJobsDiv = document.getElementById('amountOfJobs');
+		const county = latestJobs.matchningslista.matchningdata[0].lan;
+		const amountOfJobs = latestJobs.matchningslista.antal_platsannonser_exakta;
+
+		const amountOfJobsContent = `<p> Antal ${match} jobb i <span>${county}:</span> ${amountOfJobs}`;
+		amountOfJobsDiv.innerHTML = amountOfJobsContent;
+
+	}
 
 	displayOptions(optionsValue) {
         let optionOutput = ''
@@ -220,7 +244,11 @@ class DOM {
 
 	displayListed(latestJobs) {
 
-		const outputListJobs = document.getElementById('outputListJobs');
+        const outputListJobs = document.getElementById('outputListJobs');
+        
+        if(latestJobs.matchningslista.antal_platsannonser){
+        newDOM.displayAmount(latestJobs);
+
 		const jobData = latestJobs.matchningslista.matchningdata;
 		let listedJobs = '';
 		outputListJobs.innerHTML = '';
@@ -253,6 +281,9 @@ class DOM {
 				newFetch.fetchSingleJobPostById(jobData[i].annonsid);
 			});
 		}
+        } else {
+            outputListJobs.innerHTML='Inga matchade jobb';
+        }
 	}
 
 //	displayLatestJobsByParam(professionID, countyID, rows, pageNumber) {
@@ -296,16 +327,14 @@ class DOM {
 const newDOM = new DOM;
 const newController = new Controller;
 const newFetch = new Fetch;
+const newInit = new Init;
+const url = new URL(window.location.href);
 
 //newDOM.displayTotalAmountOfJobs();
 //newDOM.displayPageNumber();
 //newDOM.displayOptions(allCounties.soklista.sokdata, filterCounty)
 
-newController.SavedAdsButtonEventlistener();
-newController.filterButtons();
-newController.searchField();
-
 //Starts fetch when entering the homepage
-newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).then(newDOM.displayOptions);
-newFetch.fetchList(`/arbetsformedling/soklista/lan`).then(newDOM.displayOptions);
-newFetch.fetchList(`/platsannonser/matchning?sida=1&antalrader=10&lanid=1`).then(newDOM.displayListed);
+newInit.frontPage();
+//lägg till:
+//window.history.replaceState(null, null, "?sok=false&sida=1&antalrader=10&lanid=1");
