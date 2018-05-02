@@ -11,7 +11,6 @@ function changeUrl(url, substringToDelete) {
 }
 
 class Init {
-    
     frontPage(){
         
         if(url.indexOf("?") > -1) {
@@ -39,12 +38,10 @@ class Init {
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).
         then(newDOM.displayOptions);
         
-    }
-    
+    }    
 }
 
 class Controller {
-    
     addToUrl(newUrlEnding){
         window.history.replaceState(null, null, newUrlEnding);
     }
@@ -73,20 +70,14 @@ class Controller {
 		filterProfessionButton.addEventListener('click', () => {
             location.reload();
             newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
-            
-            newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed);
 		});
 		filterCountyButton.addEventListener('click', () => {
             location.reload();
             newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
-            
-            newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed)
 		});
 		filterJobsByAmountButton.addEventListener('click', () => {
             location.reload();
             newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
-            
-            newFetch.fetchList(`/platsannonser/matchning?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`).then(newDOM.displayListed)
 		});
 
 	}
@@ -145,9 +136,7 @@ class Controller {
                 location.reload();  
                 newController.addToUrl(`?sida=${prevPageNumber}&antalrader=${urlEnding}`);
             }  
-        })
-        
-        
+        })   
         nextPage.addEventListener('click', function(){
             
             let currentPageNumber = (new URL(document.location)).
@@ -238,7 +227,6 @@ class Fetch {
 }
 
 class DOM {
-    
 	constructor() {
 		this.fetch = new Fetch();
 	}
@@ -377,11 +365,9 @@ class DOM {
         newController.paginationButtons(latestJobs.matchningslista.antal_sidor);
         
     }
-
 }
 
 const url = window.location.href
-console.log(url)
 const newDOM = new DOM;
 const newController = new Controller;
 const newFetch = new Fetch;
