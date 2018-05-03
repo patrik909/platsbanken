@@ -34,9 +34,9 @@ class Init {
         newController.SavedAdsButtonEventlistener();
         
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
-        then(newDOM.displayOptions);
+        then(newDOM.displayFilterOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).
-        then(newDOM.displayOptions);
+        then(newDOM.displayFilterOptions);
         
     }    
 }
@@ -102,13 +102,13 @@ class Controller {
 	}
 
 	autoCompleteSearch() {
-
 		const searchListItems = document.getElementsByClassName('searchDraft');
 
 		for (let draftItem of searchListItems) {
 			draftItem.addEventListener('click', function () {
 				autoCompleteOutput.innerHTML = '';
-                newFetch.fetchList(`/platsannonser/matchning?nyckelord=${this.id}`).then(newDOM.displayListed)
+                location.reload();
+                newController.addToUrl(`?nyckelord=${this.id}`);
 			});
 		}
 		document.addEventListener('click', function (event) {
@@ -230,26 +230,21 @@ class DOM {
 	constructor() {
 		this.fetch = new Fetch();
 	}
-
-	displayAmount(latestJobs) {
-
+    
+	displayAmountOfJobs(latestJobs) {
 		const amountOfJobsDiv = document.getElementById('amountOfJobs');
 		const county = latestJobs.matchningslista.matchningdata[0].lan;
-		const amountOfJobs = latestJobs.matchningslista.antal_platsannonser_exakta;
+		const amountOfJobs = latestJobs.matchningslista.antal_platsannonser;
 
 		const amountOfJobsContent = `<p> Antal jobb i <span>${county}:</span> ${amountOfJobs}`;
 		amountOfJobsDiv.innerHTML = amountOfJobsContent;
-
 	}
 
-	displayOptions(optionsValue) {
+	displayFilterOptions(optionsValue) {
         let optionOutput = ''
-        if(optionsValue.soklista.listnamn === 'yrkesomraden'){
-            optionOutput = document.getElementById('filterProfession');
-        } else {
-            optionOutput = document.getElementById('filterCounty');
-        }
-		let options = '';
+        let optionsToList = optionsValue.soklista.listnamn
+        let options = '';
+        
 		for (let option of optionsValue.soklista.sokdata) {
 
 			const optionID = option.id;
@@ -257,6 +252,15 @@ class DOM {
 
 			options += `<option value="${optionID}">${optionName}</option>`;
 		}
+        
+        if(optionsToList === 'yrkesomraden'){
+            optionOutput = document.getElementById('filterProfession');
+            optionOutput.innerHTML = options;
+        } else {
+            optionOutput = document.getElementById('filterCounty');
+            optionOutput.innerHTML = `<option value=>${optionName}</option>`
+        }
+        
 		optionOutput.innerHTML = options;
 	}
     
@@ -290,7 +294,7 @@ class DOM {
         const outputListJobs = document.getElementById('outputListJobs');
         
         if(latestJobs.matchningslista.antal_platsannonser){
-            newDOM.displayAmount(latestJobs);
+            newDOM.displayAmountOfJobs(latestJobs);
 
             const jobData = latestJobs.matchningslista.matchningdata;
             let listedJobs = '';
@@ -353,17 +357,13 @@ class DOM {
 		}
 	}
     
-    pagination(latestJobs){
-        
-        let currentPageNumber = (new URL(document.location)).
-        searchParams.get("sida");
-        
+    pagination(latestJobs){    
+        const currentPageNumber = (new URL(document.location)).searchParams.get("sida");
         const pageNumberDiv = document.getElementById('pageNumber');
+        const totalAmountOfPages = latestJobs.matchningslista.antal_sidor
         
         pageNumberDiv.innerHTML = `${currentPageNumber} av ${latestJobs.matchningslista.antal_sidor}`;
-        
-        newController.paginationButtons(latestJobs.matchningslista.antal_sidor);
-        
+        newController.paginationButtons(totalAmountOfPages);     
     }
 }
 
