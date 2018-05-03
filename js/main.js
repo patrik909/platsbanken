@@ -362,7 +362,8 @@ class DOM {
 
 			let savedAdButton = document.getElementById(`savedAd${saveAd.annonsid}`);
 			savedAdButton.addEventListener('click', function () {
-				newFetch.fetchSingleJobPostById(`${saveAd.annonsid}`);
+                location.reload();
+                newController.addToUrl(`?annonsid=${saveAd.annonsid}`);
 			});
 		}
 	}
