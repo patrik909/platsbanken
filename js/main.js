@@ -10,32 +10,11 @@ function changeUrl(url, substringToDelete) {
 	return newUrl;
 }
 
-class Init {
-    frontPage(){
-        
-        if (url.indexOf("annonsid") > -1 ){
-            let jobId = (new URL(document.location)).
-            searchParams.get("annonsid");
-            
-            newFetch.fetchList(`/platsannonser/${jobId}`).
-            then(newDOM.displaySingleJobPost);
-        }
-        else if(url.indexOf("?") > -1) {
-            let sub1 = url.indexOf("?")
-            let sub2 = url.length
-            let urlEnding = url.substring(sub1, sub2)
-            
-            newController.addToUrl(urlEnding);
-            newFetch.fetchList(`/platsannonser/matchning${urlEnding}`).
-            then(newDOM.displayListed);
-        } else {
-            newController.addToUrl(`?sida=1&antalrader=10&lanid=1`);
-            
-            newFetch.fetchList(`/platsannonser/matchning?sida=1&antalrader=10&lanid=1`).
-            then(newDOM.displayListed);
-        }
-        
-        newController.filterButtons();
+class Init {   
+    launch(){
+        newController.checkTypeOfUrl();
+        //Initializing of search functionality 
+        newController.filterButton();
         newController.searchField();
         newController.shareListing();
         newController.SavedAdsButtonEventlistener();
@@ -43,8 +22,7 @@ class Init {
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
         then(newDOM.displayFilterOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).
-        then(newDOM.displayFilterOptions);
-        
+        then(newDOM.displayFilterOptions);     
     }    
 }
 
@@ -53,40 +31,53 @@ class Controller {
         window.history.replaceState(null, null, newUrlEnding);
     }
 
+    checkTypeOfUrl(){
+        if (url.includes("annonsid")){
+            let jobId = (new URL(document.location)).
+            searchParams.get("annonsid");
+            
+            newFetch.fetchList(`/platsannonser/${jobId}`).
+            then(newDOM.displaySingleJobPost);
+        }
+        else if(url.includes("?")) {
+            let sub1 = url.indexOf("?")
+            let sub2 = url.length
+            let urlEnding = url.substring(sub1, sub2)
+            
+            newController.addToUrl(urlEnding);
+            newFetch.fetchList(`/platsannonser/matchning${urlEnding}`).
+            then(newDOM.displayListed);
+        } 
+        else {
+            newController.addToUrl(`?sida=1&antalrader=10&lanid=1`);
+            
+            newFetch.fetchList(`/platsannonser/matchning?sida=1&antalrader=10&lanid=1`).
+            then(newDOM.displayListed);
+        }
+    }
+    
 	filterElements() {
 		const filterProfession = document.getElementById('filterProfession');
 		const filterCounty = document.getElementById('filterCounty');
 		const filterJobsByAmount = document.getElementById('filterJobsByAmount');
 		const searchJobs = document.getElementById('searchJobs');
-
-		const filterJobsByAmountButton = document.getElementById('filterJobsByAmountButton');
-		const filterCountyButton = document.
-		getElementById('filterCountyButton');
 		const searchJobsButton = document.
 		getElementById('searchJobsButton');
-		const filterProfessionButton = document.
-		getElementById('filterProfessionButton');
+		const filterButton = document.
+		getElementById('filterButton');
 
 		const autoCompleteOutput = document.getElementById('autoCompleteOutput');
 	}
 
-	filterButtons() {
-
+	filterButton() {
+        
 		this.filterElements();
-
-		filterProfessionButton.addEventListener('click', () => {
+        
+		filterButton.addEventListener('click', () => {
             location.reload();
             newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
 		});
-		filterCountyButton.addEventListener('click', () => {
-            location.reload();
-            newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
-		});
-		filterJobsByAmountButton.addEventListener('click', () => {
-            location.reload();
-            newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
-		});
-
+        
 	}
 
 	searchField() {
@@ -195,7 +186,7 @@ class Save {
 
         let savedJobId = JSON.parse(localStorage.getItem('jobList'));  
 
-        if (savedJobId == null) {
+        if (savedJobId === null) {
             let jobIdArray = [];
             jobIdArray.push(id);
             localStorage.setItem('jobList', JSON.stringify(jobIdArray));
@@ -421,13 +412,13 @@ class DOM {
 	}
     
 }
-
-const url = window.location.href
+const url = window.location.href;
 const newDOM = new DOM;
 const newSave = new Save;
 const newController = new Controller;
 const newFetch = new Fetch;
+
 const newInit = new Init;
 
 //Starts fetch when entering the homepage
-newInit.frontPage();
+newInit.launch();
