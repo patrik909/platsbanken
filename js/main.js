@@ -13,7 +13,14 @@ function changeUrl(url, substringToDelete) {
 class Init {
     frontPage(){
         
-        if(url.indexOf("?") > -1) {
+        if (url.indexOf("annonsid") > -1 ){
+            let jobId = (new URL(document.location)).
+            searchParams.get("annonsid");
+            
+            newFetch.fetchList(`/platsannonser/${jobId}`).
+            then(newDOM.displaySingleJobPost);
+        }
+        else if(url.indexOf("?") > -1) {
             let sub1 = url.indexOf("?")
             let sub2 = url.length
             let urlEnding = url.substring(sub1, sub2)
@@ -21,9 +28,9 @@ class Init {
             newController.addToUrl(urlEnding);
             newFetch.fetchList(`/platsannonser/matchning${urlEnding}`).
             then(newDOM.displayListed);
-
         } else {
             newController.addToUrl(`?sida=1&antalrader=10&lanid=1`);
+            
             newFetch.fetchList(`/platsannonser/matchning?sida=1&antalrader=10&lanid=1`).
             then(newDOM.displayListed);
         }
@@ -175,6 +182,29 @@ class Controller {
 		})
 
 	}
+    
+    shareButtonEventListener(){
+		const shareButton = document.getElementById('shareButton');
+		shareButton.addEventListener('click', newDOM.displayUrl);
+	}
+    
+}
+
+class Save {
+	saveAdToBrowser(id) {
+
+        let savedJobId = JSON.parse(localStorage.getItem('jobList'));  
+
+        if (savedJobId == null) {
+            let jobIdArray = [];
+            jobIdArray.push(id);
+            localStorage.setItem('jobList', JSON.stringify(jobIdArray));
+        }    
+        else {
+            savedJobId.push(id);
+            localStorage.setItem('jobList', JSON.stringify(savedJobId));
+        }
+	}
 }
 
 class Fetch {
@@ -187,26 +217,6 @@ class Fetch {
 			}).catch((error) => {
 				console.log(error);
 			})
-	}
-    
-	fetchSingleJobPostById(jobId) {
-
-		const fetchSingleJobPost = fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${jobId}`);
-
-		fetchSingleJobPost.then((response) => {
-			return response.json();
-		}).then((fetchSingleJobPost) => {
-
-			let oldUrl = new URL(window.location.href);
-			let stringInUrlToDelete = 'index.html';
-			let url = changeUrl(oldUrl, stringInUrlToDelete);
-
-			location.assign(`${url}single_job_post.html?id=${jobId}`);
-
-		}).catch((error) => {
-			console.log(error);
-		})
-
 	}
 
 	fetchSavedAds(saveAds) {
@@ -244,9 +254,8 @@ class DOM {
         let optionOutput = ''
         let optionsToList = optionsValue.soklista.listnamn
         let options = '';
-        
+        //console.log(option.namn)
 		for (let option of optionsValue.soklista.sokdata) {
-
 			const optionID = option.id;
 			const optionName = option.namn;
 
@@ -258,7 +267,7 @@ class DOM {
             optionOutput.innerHTML = options;
         } else {
             optionOutput = document.getElementById('filterCounty');
-            optionOutput.innerHTML = `<option value=>${optionName}</option>`
+            optionOutput.innerHTML = options;
         }
         
 		optionOutput.innerHTML = options;
@@ -324,8 +333,9 @@ class DOM {
                 outputListJobs.appendChild(latestJob);
 
                 let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
-                readMoreButton.addEventListener('click', () => {
-                    newFetch.fetchSingleJobPostById(jobData[i].annonsid);
+                readMoreButton.addEventListener('click', () => {  
+                    location.reload();
+                    newController.addToUrl(`?annonsid=${jobData[i].annonsid}`)
                 });
             }
         } else {
@@ -365,10 +375,55 @@ class DOM {
         pageNumberDiv.innerHTML = `${currentPageNumber} av ${latestJobs.matchningslista.antal_sidor}`;
         newController.paginationButtons(totalAmountOfPages);     
     }
+     
+    displaySingleJobPost(jobDetails){
+        console.log(jobDetails);
+
+        const outputSingleJobPost = document.getElementById('jobDetails');
+        const headline = document.getElementById('headline');
+
+        const singleJobDetails = jobDetails.platsannons.annons;
+        const workplaceDetails = jobDetails.platsannons.arbetsplats;
+        const employmentConditions = jobDetails.platsannons.villkor;
+        const jobId = jobDetails.platsannons.annons.annonsid;
+        outputListJobs.innerHTML = `
+            <div class="jobDetails">
+                <button id="shareButton">Dela</button>
+                <input id="displayUrl" class="hidden" value="" />
+                <button id='saveAdButton' data-id='${jobId}'>Spara</button>
+                <button id="backButton">Tillbaka</button>
+                <h2>${singleJobDetails.annonsrubrik}</h2>
+                <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
+                <p>${singleJobDetails.annonstext}</p>
+                <p>${workplaceDetails.arbetsplatsnamn}</p>
+                <p>${singleJobDetails.anstallningstyp}</p>
+            </div>
+        `;
+        
+        let backButton = document.getElementById('backButton');
+		backButton.addEventListener('click', function () {
+            //BAck button
+        })
+        let saveAdButton = document.getElementById('saveAdButton');
+		saveAdButton.addEventListener('click', function () {
+            newSave.saveAdToBrowser(this.dataset.id);
+        })
+        
+        newController.shareButtonEventListener();
+
+	}
+    
+	displayUrl(){
+		const displayUrl = document.getElementById('displayUrl');
+		displayUrl.classList.toggle('hidden');
+		displayUrl.value = url;
+	}
+    
 }
 
 const url = window.location.href
 const newDOM = new DOM;
+const newSave = new Save;
 const newController = new Controller;
 const newFetch = new Fetch;
 const newInit = new Init;
