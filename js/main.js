@@ -10,7 +10,7 @@ function changeUrl(url, substringToDelete) {
 	return newUrl;
 }
 
-class Init {   
+class Init {
     launch(){
         newController.checkTypeOfUrl();
         //Initializing of search functionality 
@@ -18,7 +18,7 @@ class Init {
         newController.searchField();
         newController.shareListing();
         newController.SavedAdsButtonEventlistener();
-        
+        //Fetching values for options in filter.
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
         then(newDOM.displayFilterOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).
