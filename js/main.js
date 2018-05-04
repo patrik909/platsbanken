@@ -10,7 +10,7 @@ function changeUrl(url, substringToDelete) {
 	return newUrl;
 }
 
-class Init {   
+class Init {
     launch(){
         newController.checkTypeOfUrl();
         //Initializing of search functionality 
@@ -18,7 +18,7 @@ class Init {
         newController.searchField();
         newController.shareListing();
         newController.SavedAdsButtonEventlistener();
-        
+        //Fetching values for options in filter.
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
         then(newDOM.displayFilterOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).
@@ -49,10 +49,7 @@ class Controller {
             then(newDOM.displayListed);
         } 
         else {
-            newController.addToUrl(`?sida=1&antalrader=10&lanid=1`);
-            
-            newFetch.fetchList(`/platsannonser/matchning?sida=1&antalrader=10&lanid=1`).
-            then(newDOM.displayListed);
+            location.replace(url+ `?sida=1&antalrader=10&lanid=1`);
         }
     }
     
@@ -61,11 +58,8 @@ class Controller {
 		const filterCounty = document.getElementById('filterCounty');
 		const filterJobsByAmount = document.getElementById('filterJobsByAmount');
 		const searchJobs = document.getElementById('searchJobs');
-		const searchJobsButton = document.
-		getElementById('searchJobsButton');
-		const filterButton = document.
-		getElementById('filterButton');
-
+		const searchJobsButton = document.getElementById('searchJobsButton');
+		const filterButton = document.getElementById('filterButton');
 		const autoCompleteOutput = document.getElementById('autoCompleteOutput');
 	}
 
