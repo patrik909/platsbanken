@@ -47,7 +47,7 @@ h1{
 #upperForm button {
     padding: 5px 16px;
     letter-spacing: 1px;
-    margin: 0 5px;
+    margin: 0 15px;
     border-radius: 30px;
     border: none;
     font-weight: 700;
@@ -58,7 +58,7 @@ h1{
     letter-spacing: 1px;
     background: white;
     border: none;
-    margin: 0 5px;
+    margin: 0 15px;
     height: 20px;
 }
 #lowerForm {
