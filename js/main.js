@@ -12,44 +12,44 @@ function changeUrl(url, substringToDelete) {
 
 class Init {
     launch(){
-        newController.checkTypeOfUrl();
+        newController.checkUrlEnding();
         //Initializing of search functionality 
         newController.filterButton();
         newController.searchField();
         newController.shareListing();
-        newController.SavedAdsButtonEventlistener();
+        newController.savedAdsButtonEventlistener();
         //Fetching values for options in filter.
-        newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).
-        then(newDOM.displayFilterOptions);
-        newFetch.fetchList(`/arbetsformedling/soklista/lan`).
-        then(newDOM.displayFilterOptions);     
+        newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).then(newDOM.displayFilterOptions);
+        newFetch.fetchList(`/arbetsformedling/soklista/lan`).then(newDOM.displayFilterOptions);     
     }    
 }
 
 class Controller {
-    addToUrl(newUrlEnding){
+    addToUrl(newUrlEnding) {
         window.history.replaceState(null, null, newUrlEnding);
     }
 
-    checkTypeOfUrl(){
-        if (url.includes("annonsid")){
-            let jobId = (new URL(document.location)).
-            searchParams.get("annonsid");
+    checkUrlEnding() {
+        const urlFetchInfo = '?';
+        
+        if (url.includes('annonsid')) {
+            let jobId = (new URL(document.location)).searchParams.get('annonsid');
             
             newFetch.fetchList(`/platsannonser/${jobId}`).
             then(newDOM.displaySingleJobPost);
         }
-        else if(url.includes("?")) {
-            let sub1 = url.indexOf("?")
-            let sub2 = url.length
-            let urlEnding = url.substring(sub1, sub2)
+        else if (url.includes(urlFetchInfo)) {
+            const firstIndexOfUrlEnding = url.indexOf("?");
+            const lastIndexOfUrlEnding = url.length;
+            const urlEnding = url.substring(firstIndexOfUrlEnding, lastIndexOfUrlEnding);
             
             newController.addToUrl(urlEnding);
             newFetch.fetchList(`/platsannonser/matchning${urlEnding}`).
             then(newDOM.displayListed);
         } 
         else {
-            location.replace(url+ `?sida=1&antalrader=10&lanid=1`);
+            //If entering the page with index.html only. Add Stockholm fetch info to url.
+            location.replace(url + `?sida=1&antalrader=10&lanid=1`);
         }
     }
     
@@ -57,38 +57,35 @@ class Controller {
 		const filterProfession = document.getElementById('filterProfession');
 		const filterCounty = document.getElementById('filterCounty');
 		const filterJobsByAmount = document.getElementById('filterJobsByAmount');
-		const searchJobs = document.getElementById('searchJobs');
-		const searchJobsButton = document.getElementById('searchJobsButton');
 		const filterButton = document.getElementById('filterButton');
-		const autoCompleteOutput = document.getElementById('autoCompleteOutput');
 	}
 
 	filterButton() {
-        
 		this.filterElements();
         
-		filterButton.addEventListener('click', () => {
+        filterButton.addEventListener('click', () => {
             location.reload();
-            newController.addToUrl(`?sida=${1}&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
-		});
-        
+            newController.addToUrl(`?sida=1&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
+		});       
 	}
+    
+    searchElements() {
+        const searchJobsInput = document.getElementById('searchJobsInput');
+		const searchJobsButton = document.getElementById('searchJobsButton');
+        const autoCompleteOutput = document.getElementById('autoCompleteOutput');
+    }
 
 	searchField() {
+		this.searchElements();
 
-		this.filterElements();
-
-		searchJobs.addEventListener('keyup', () => {
-			if (searchJobs.value.length < 3) {
+		searchJobsInput.addEventListener('keyup', () => {
+			if (searchJobsInput.value.length < 3) {
 				autoCompleteOutput.innerHTML = '<p id="autoCompleteMessage">Skriv 3 tecken för att få upp sökförslag</p>';
-			} else if (searchJobs.value.length === 3) {
+			} 
+            else if (searchJobsInput.value.length === 3) {
 				autoCompleteOutput.innerHTML = '';
-                newFetch.fetchList(`/platsannonser/soklista/yrken/${searchJobs.value}`).
+                newFetch.fetchList(`/platsannonser/soklista/yrken/${searchJobsInput.value}`).
                 then(newDOM.displayAutoComplete);
-			} else{
-				// Eller sortera bort förslag 
-                newFetch.fetchList(`/platsannonser/matchning?nyckelord=${searchJobs.value}`).
-                then(newDOM.displayListed);
 			}
 		});
 	}
@@ -100,79 +97,64 @@ class Controller {
 			draftItem.addEventListener('click', function () {
 				autoCompleteOutput.innerHTML = '';
                 location.reload();
-                newController.addToUrl(`?nyckelord=${this.id}`);
+                newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${this.id}`);
 			});
 		}
-		document.addEventListener('click', function (event) {
-			autoCompleteOutput.innerHTML = ""
+		document.addEventListener('click', () => {
+            //Closes the div if user clicks outside the div.
+			autoCompleteOutput.innerHTML = '';
 		})
 
 	}
-    
-    paginationButtons(totalPageNumbers){
+
+    paginationButtons(totalPageNumbers) {
+        const currentPageNumber = (new URL(document.location)).searchParams.get("sida");
+        const firstIndexOfUrlEnding = url.indexOf("antalrader")+11;
+        const lastIndexOfUrlEnding = url.length;
+        const urlEnding = url.substring(firstIndexOfUrlEnding, lastIndexOfUrlEnding);
         
-        const previousPage = document.getElementById('previousPage');
-        const nextPage = document.getElementById('nextPage');
-        let currentPageNumber = (new URL(document.location)).searchParams.get("sida");
-        previousPage.addEventListener('click', function(){
-            
-            //let currentPageNumber = (new URL(document.location)).
-            searchParams.get("sida");
-            let sub1 = url.indexOf("antalrader")+11
-            let sub2 = url.length
-            let urlEnding = url.substring(sub1, sub2)
-            
-            if (Number(currentPageNumber) >= 2){
-                // --
+        const previousPageButton = document.getElementById('previousPage');
+        const nextPageButton = document.getElementById('nextPage');
+        
+        previousPageButton.addEventListener('click', () => {         
+            if (Number(currentPageNumber) >= 2) {
                 let prevPageNumber = Number(currentPageNumber)-1;
                 location.reload();  
                 newController.addToUrl(`?sida=${prevPageNumber}&antalrader=${urlEnding}`);
             }  
         })   
-        nextPage.addEventListener('click', function(){
-            
-            //let currentPageNumber = (new URL(document.location)).
-            //searchParams.get("sida");
-            let sub1 = url.indexOf("antalrader")+11
-            let sub2 = url.length
-            let urlEnding = url.substring(sub1, sub2)
-            
-            if (Number(currentPageNumber) < totalPageNumbers){
-                // ++
+        nextPageButton.addEventListener('click', () => {      
+            if (Number(currentPageNumber) < totalPageNumbers) {
                 let nextPageNumber = Number(currentPageNumber)+1;
                 location.reload();  
                 newController.addToUrl(`?sida=${nextPageNumber}&antalrader=${urlEnding}`);
             }   
-        })
-        
+        })    
     }
     
-    shareListing(){
-        const shareListingButton = document.
-        getElementById('shareListingButton');
-        const outputShareListing = document.
-        getElementById('outputShareListing');
+    shareListing() {
+        const shareListingButton = document.getElementById('shareListingButton');
+        const outputShareListing = document.getElementById('outputShareListing');
         
-        shareListingButton.addEventListener('click', function (){
-            outputShareListing.innerHTML=window.location.href
+        shareListingButton.addEventListener('click', () => {
+            outputShareListing.innerHTML=window.location.href;
         });
     }
 
-	SavedAdsButtonEventlistener() {
-
+	savedAdsButtonEventlistener() {
 		const displaySavedAdsButton = document.getElementById('savedAds');
+        
 		displaySavedAdsButton.addEventListener('click', () => {
 			let savedAds = JSON.parse(localStorage.getItem('jobList'));
 			newFetch.fetchSavedAds(savedAds)
 		})
-
 	}
     
     shareButtonEventListener(){
 		const shareButton = document.getElementById('shareButton');
+        
 		shareButton.addEventListener('click', newDOM.displayUrl);
-	}
-    
+	}  
 }
 
 class Save {
