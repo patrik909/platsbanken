@@ -113,10 +113,10 @@ class Controller {
         
         const previousPage = document.getElementById('previousPage');
         const nextPage = document.getElementById('nextPage');
-        
+        let currentPageNumber = (new URL(document.location)).searchParams.get("sida");
         previousPage.addEventListener('click', function(){
             
-            let currentPageNumber = (new URL(document.location)).
+            //let currentPageNumber = (new URL(document.location)).
             searchParams.get("sida");
             let sub1 = url.indexOf("antalrader")+11
             let sub2 = url.length
@@ -131,8 +131,8 @@ class Controller {
         })   
         nextPage.addEventListener('click', function(){
             
-            let currentPageNumber = (new URL(document.location)).
-            searchParams.get("sida");
+            //let currentPageNumber = (new URL(document.location)).
+            //searchParams.get("sida");
             let sub1 = url.indexOf("antalrader")+11
             let sub2 = url.length
             let urlEnding = url.substring(sub1, sub2)
