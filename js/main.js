@@ -64,7 +64,9 @@ class Controller {
 		this.filterElements();
         
         filterButton.addEventListener('click', () => {
-            location.reload();
+            setTimeout(function(){
+              window.location.reload();
+            }, 500);
             newController.addToUrl(`?sida=1&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
 		});       
 	}
@@ -96,7 +98,9 @@ class Controller {
 		for (let draftItem of searchListItems) {
 			draftItem.addEventListener('click', function () {
 				autoCompleteOutput.innerHTML = '';
-                location.reload();
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);
                 newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${this.id}`);
 			});
 		}
@@ -119,14 +123,18 @@ class Controller {
         previousPageButton.addEventListener('click', () => {         
             if (Number(currentPageNumber) >= 2) {
                 let prevPageNumber = Number(currentPageNumber)-1;
-                location.reload();  
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);  
                 newController.addToUrl(`?sida=${prevPageNumber}&antalrader=${urlEnding}`);
             }  
         })   
         nextPageButton.addEventListener('click', () => {      
             if (Number(currentPageNumber) < totalPageNumbers) {
                 let nextPageNumber = Number(currentPageNumber)+1;
-                location.reload();  
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);  
                 newController.addToUrl(`?sida=${nextPageNumber}&antalrader=${urlEnding}`);
             }   
         })    
@@ -268,7 +276,7 @@ class DOM {
 
 	displayListed(latestJobs) {
         const outputListJobs = document.getElementById('outputListJobs');
-        
+       
         if(latestJobs.matchningslista.antal_platsannonser){
             newDOM.displayAmountOfJobs(latestJobs);
 
@@ -298,10 +306,14 @@ class DOM {
                     <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
                 `;
                 outputListJobs.appendChild(latestJob);
+                
+                localStorage.setItem('backUrl', window.location.href);
 
                 let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
                 readMoreButton.addEventListener('click', () => {  
-                    location.reload();
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);
                     newController.addToUrl(`?annonsid=${jobData[i].annonsid}`)
                 });
             }
@@ -329,7 +341,9 @@ class DOM {
 
 			let savedAdButton = document.getElementById(`savedAd${saveAd.annonsid}`);
 			savedAdButton.addEventListener('click', function () {
-                location.reload();
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);
                 newController.addToUrl(`?annonsid=${saveAd.annonsid}`);
 			});
 		}
@@ -343,10 +357,11 @@ class DOM {
         pageNumberDiv.innerHTML = `${currentPageNumber} av ${latestJobs.matchningslista.antal_sidor}`;
         newController.paginationButtons(totalAmountOfPages);     
     }
-     
+   
+
     displaySingleJobPost(jobDetails){
         console.log(jobDetails);
-
+        //alert(backUrl);
         const outputSingleJobPost = document.getElementById('jobDetails');
         const headline = document.getElementById('headline');
 
@@ -356,10 +371,10 @@ class DOM {
         const jobId = jobDetails.platsannons.annons.annonsid;
         outputListJobs.innerHTML = `
             <div class="jobDetails">
-                <button id="backButton">Tillbaka</button>
                 <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
+                <button id="backButton">Tillbaka</button>
                 <h2>${singleJobDetails.annonsrubrik}</h2>
                 <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
                 <p>${singleJobDetails.annonstext}</p>
@@ -371,6 +386,9 @@ class DOM {
         let backButton = document.getElementById('backButton');
 		backButton.addEventListener('click', function () {
             //BAck button
+            let backUrl = localStorage.getItem('backUrl');
+            document.location.assign(backUrl);
+            localStorage.removeItem('backUrl');
         })
         let saveAdButton = document.getElementById('saveAdButton');
 		saveAdButton.addEventListener('click', function () {
