@@ -137,7 +137,8 @@ class Controller {
         const outputShareListing = document.getElementById('outputShareListing');
         
         shareListingButton.addEventListener('click', () => {
-            outputShareListing.innerHTML=window.location.href;
+            outputShareListing.value = window.location.href;
+            outputShareListing.classList.toggle('hidden');
         });
     }
 
@@ -146,7 +147,8 @@ class Controller {
         
 		displaySavedAdsButton.addEventListener('click', () => {
 			let savedAds = JSON.parse(localStorage.getItem('jobList'));
-			newFetch.fetchSavedAds(savedAds)
+            newFetch.fetchSavedAds(savedAds);
+            outputSavedJobs.classList.toggle('hidden');
 		})
 	}
     
@@ -318,6 +320,8 @@ class DOM {
 		const savedAdsList = document.createElement('ul');
 		const jobDataLength = jobArray.length;
 
+        outputSavedJobs.innerHTML = `<h3>Sparade jobbannonser</h3>`;
+
 		for (let i = 0; i < jobDataLength; i++) {
 			const listElement = document.createElement('li');
 			let saveAd = jobArray[i].platsannons.annons;
@@ -357,9 +361,9 @@ class DOM {
         outputListJobs.innerHTML = `
             <div class="jobDetails">
                 <button id="backButton">Tillbaka</button>
+                <button id='saveAdButton' data-id='${jobId}'>Spara</button>
                 <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
-                <button id='saveAdButton' data-id='${jobId}'>Spara</button>
                 <h2>${singleJobDetails.annonsrubrik}</h2>
                 <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
                 <p>${singleJobDetails.annonstext}</p>
