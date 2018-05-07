@@ -435,8 +435,7 @@ class DOM {
         const outputSingleJobPost = document.getElementById('jobDetails');
         const headline = document.getElementById('headline');
 
-        const singleJobDetails = jobDetails.platsannons.annons;
-        const workplaceDetails = jobDetails.platsannons.arbetsplats;
+        const singleJobDetails = jobDetails.platsannons;
         const employmentConditions = jobDetails.platsannons.villkor;
         const jobId = jobDetails.platsannons.annons.annonsid;
         outputListJobs.innerHTML = `
@@ -444,12 +443,16 @@ class DOM {
                 <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
+
+
                 <button id="backButton">Tillbaka</button>
-                <h2>${singleJobDetails.annonsrubrik}</h2>
-                <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
-                <p>${singleJobDetails.annonstext}</p>
-                <p>${workplaceDetails.arbetsplatsnamn}</p>
-                <p>${singleJobDetails.anstallningstyp}</p>
+                <h2>${singleJobDetails.annons.annonsrubrik}</h2>
+                <p><strong>${singleJobDetails.annons.antal_platser} st ${singleJobDetails.annons.yrkesbenamning}</strong> - ${singleJobDetails.annons.kommunnamn}</p>
+                <p>${singleJobDetails.annons.annonstext}</p>
+                <p>${singleJobDetails.arbetsplats.arbetsplatsnamn}</p>
+                <p>${singleJobDetails.annons.anstallningstyp}</p>
+                <p><strong>Sista ansökningsdag:</strong> ${singleJobDetails.ansokan.sista_ansokningsdag}</p>
+
             </div>
         `;
         
