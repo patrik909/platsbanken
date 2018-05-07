@@ -356,10 +356,10 @@ class DOM {
         const jobId = jobDetails.platsannons.annons.annonsid;
         outputListJobs.innerHTML = `
             <div class="jobDetails">
+                <button id="backButton">Tillbaka</button>
                 <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
-                <button id="backButton">Tillbaka</button>
                 <h2>${singleJobDetails.annonsrubrik}</h2>
                 <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
                 <p>${singleJobDetails.annonstext}</p>
