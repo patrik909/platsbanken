@@ -29,6 +29,16 @@ class Controller {
     addToUrl(newUrlEnding) {
         window.history.replaceState(null, null, newUrlEnding);
     }
+    
+    formatDate(date) {
+        let formatedDate = '';
+        if (!date) {
+            formatedDate = 'Öppen';
+        } else {
+            formatedDate = date.substring(0, 10);
+        }
+        return formatedDate;
+    }
 
     checkUrlEnding() {
         const urlFetchInfo = '?';
@@ -341,12 +351,7 @@ class DOM {
             for (let i = 0; i < jobDataLength; i++) {
 
                 const date = jobData[i].sista_ansokningsdag;
-                let formatedDate = '';
-                if (!date) {
-                    formatedDate = 'Öppen';
-                } else {
-                    formatedDate = date.substring(0, 10);
-                }
+                let formatedDate = newController.formatDate(date);
 
                 const latestJob = document.createElement('div');
                 latestJob.classList.add('latestJobs');
@@ -435,30 +440,40 @@ class DOM {
         const outputSingleJobPost = document.getElementById('jobDetails');
         const headline = document.getElementById('headline');
 
-        const singleJobDetails = jobDetails.platsannons;
+        const singleJobDetails = jobDetails.platsannons.annons;
+        const applicationDetails = jobDetails.platsannons.ansokan;
+        const workplaceDetails = jobDetails.platsannons.arbetsplats;
         const employmentConditions = jobDetails.platsannons.villkor;
+        
+        const date = applicationDetails.sista_ansokningsdag;
+        let formatedDate = newController.formatDate(date);
+        
         const jobId = jobDetails.platsannons.annons.annonsid;
         outputListJobs.innerHTML = `
             <div class="jobDetails">
                 <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
-
-
                 <button id="backButton">Tillbaka</button>
-                <h2>${singleJobDetails.annons.annonsrubrik}</h2>
-                <p><strong>${singleJobDetails.annons.antal_platser} st ${singleJobDetails.annons.yrkesbenamning}</strong> - ${singleJobDetails.annons.kommunnamn}</p>
-                <p>${singleJobDetails.annons.annonstext}</p>
-                <p>${singleJobDetails.arbetsplats.arbetsplatsnamn}</p>
-                <p>${singleJobDetails.annons.anstallningstyp}</p>
-                <p><strong>Sista ansökningsdag:</strong> ${singleJobDetails.ansokan.sista_ansokningsdag}</p>
+                <h2>${singleJobDetails.annonsrubrik}</h2>
+                <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
+                <p><strong>Antal platser:</strong> ${singleJobDetails.antal_platser} </p>
+                <p>${singleJobDetails.annonstext}</p>
+                <p>${workplaceDetails.arbetsplatsnamn}</p>
 
+                <h3>Villkor</h3>
+                <p><strong>Anställningsform:</strong> ${employmentConditions.arbetstid}</p>
+                <p><strong>Lön:</strong> ${employmentConditions.lonetyp}</p>
+
+                <h3>Ansökan</h3>
+                <p><strong>Sista ansökningsdag:</strong> ${formatedDate}</p>
+                <p><a href="${applicationDetails.webbplats}">Ansök här</a></p>
             </div>
         `;
         
         let backButton = document.getElementById('backButton');
 		backButton.addEventListener('click', function () {
-            //BAck button
+            //Back button
             let backUrl = localStorage.getItem('backUrl');
             document.location.assign(backUrl);
             localStorage.removeItem('backUrl');
