@@ -138,7 +138,7 @@ main{
     font-weight: 600;
 }
 
-.latestJobs {
+.latestJobs, .jobDetails, .outputSavedJobs {
     background: #e5e5e5;
     border-radius: 10px;
     padding: 40px;
@@ -147,17 +147,35 @@ main{
     margin-bottom: 10px;
 }
 
-.latestJobs h3 {
+.latestJobs h3, .jobDetails h3 {
     font-size: 1.3em;
     font-weight: 900;
     margin: 0;
 }
 
-.latestJobs span {
+.latestJobs span, .jobDetails span {
     font-weight: 700;
 }
 
-.latestJobs button {
+.jobDetails input {
+    font-size: inherit;
+    width: 100%;
+    padding: 12px 0 12px 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 4px;
+}
+
+#outputShareListing {
+    font-size: inherit; 
+    max-width: 914px;
+    width: 100%;
+    padding: 12px 0 12px 12px;
+    border-color: #00358c;
+    border-radius: 4px;
+}
+
+.latestJobs button, .jobDetails button, .outputSavedJobs button {
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 700;
@@ -169,8 +187,28 @@ main{
     transition: 200ms;
 }
 
-.latestJobs button:hover {
+.latestJobs button:hover, .jobDetails button:hover, .outputSavedJobs button:hover {
     background: #0049c1;
+}
+
+.outputSavedJobs button {
+    padding: 5px 10px
+}
+
+.outputSavedJobs {
+    margin-top: 16px;
+}
+.outputSavedJobs ul {
+    list-style: none;
+    padding: 0;
+}
+
+.outputSavedJobs li {
+    margin-bottom: 8px;
+}
+
+.outputSavedJobs button {
+    margin-left: 8px;
 }
 
 #pagineringWrapper{
@@ -203,6 +241,7 @@ main{
     background: #00358c;
     color: white;
     padding: 10px 20px;
+    margin-bottom: 8px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -213,6 +252,10 @@ main{
 
 #shareListingButton:hover{
     background: #0049c1; 
+}
+
+#outputShareListing {
+    margin-bottom: 12px;
 }
 
 #savedAds {
