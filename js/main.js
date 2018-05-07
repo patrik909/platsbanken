@@ -18,6 +18,7 @@ class Init {
         newController.searchField();
         newController.shareListing();
         newController.savedAdsButtonEventlistener();
+        newController.clearLocalStorageButtonEventlistener();
         //Fetching values for options in filter.
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).then(newDOM.displayFilterOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).then(newDOM.displayFilterOptions);     
@@ -27,6 +28,16 @@ class Init {
 class Controller {
     addToUrl(newUrlEnding) {
         window.history.replaceState(null, null, newUrlEnding);
+    }
+    
+    formatDate(date) {
+        let formatedDate = '';
+        if (!date) {
+            formatedDate = 'Öppen';
+        } else {
+            formatedDate = date.substring(0, 10);
+        }
+        return formatedDate;
     }
 
     checkUrlEnding() {
@@ -64,7 +75,9 @@ class Controller {
 		this.filterElements();
         
         filterButton.addEventListener('click', () => {
-            location.reload();
+            setTimeout(function(){
+              window.location.reload();
+            }, 500);
             newController.addToUrl(`?sida=1&antalrader=${filterJobsByAmount.value}&lanid=${filterCounty.value}&yrkesomradeid=${filterProfession.value}`);
 		});       
 	}
@@ -96,7 +109,9 @@ class Controller {
 		for (let draftItem of searchListItems) {
 			draftItem.addEventListener('click', function () {
 				autoCompleteOutput.innerHTML = '';
-                location.reload();
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);
                 newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${this.id}`);
 			});
 		}
@@ -119,14 +134,18 @@ class Controller {
         previousPageButton.addEventListener('click', () => {         
             if (Number(currentPageNumber) >= 2) {
                 let prevPageNumber = Number(currentPageNumber)-1;
-                location.reload();  
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);  
                 newController.addToUrl(`?sida=${prevPageNumber}&antalrader=${urlEnding}`);
             }  
         })   
         nextPageButton.addEventListener('click', () => {      
             if (Number(currentPageNumber) < totalPageNumbers) {
                 let nextPageNumber = Number(currentPageNumber)+1;
-                location.reload();  
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);  
                 newController.addToUrl(`?sida=${nextPageNumber}&antalrader=${urlEnding}`);
             }   
         })    
@@ -145,12 +164,49 @@ class Controller {
 	savedAdsButtonEventlistener() {
 		const displaySavedAdsButton = document.getElementById('savedAds');
         
-		displaySavedAdsButton.addEventListener('click', () => {
+        displaySavedAdsButton.addEventListener('click', () => {
 			let savedAds = JSON.parse(localStorage.getItem('jobList'));
             newFetch.fetchSavedAds(savedAds);
             outputSavedJobs.classList.toggle('hidden');
 		})
 	}
+    
+    clearLocalStorageButtonEventlistener() {
+		//const displayClearLocalStorageButton = document.getElementById('clearButton');
+        
+        //const displayClearLocalStorageButton = document.createElement('button');
+        //const displayClearLocalStorageButton = document.getElementById('clearButton');
+        
+       // displayClearLocalStorageButton.onclick = alert("hej!");
+//        displayClearLocalStorageButton.setAttribute("id", "clearButton");
+//        let textnode = document.createTextNode("Ta bort mina sparade text annonser"); 
+//        displayClearLocalStorageButton.appendChild(textnode); 
+       
+       // let clearButton = document.getElementById('clearButton');
+//		displayClearLocalStorageButton.addEventListener('click', () => {
+//          //e.target(alert("hej!"));
+//            //alert(e.target.nodeName);
+//      
+//            localStorage.removeItem('jobList');
+//		})
+        
+           
+//        var target = event.target || event.srcElement;
+//var id = target.id
+
+        document.addEventListener('click', function (event) {
+            var clickedElem = event.target;
+            
+            if(clickedElem.id !== 'clearButton'){
+                return;
+            }else{
+                 localStorage.removeItem('jobList');
+            }
+
+        }, false);
+	}
+    
+  
     
     shareButtonEventListener(){
 		const shareButton = document.getElementById('shareButton');
@@ -170,13 +226,17 @@ class Save {
             localStorage.setItem('jobList', JSON.stringify(jobIdArray));
         }    
         else {
-            savedJobId.push(id);
-            localStorage.setItem('jobList', JSON.stringify(savedJobId));
+            if(!savedJobId.includes(id)){
+                savedJobId.push(id);
+                localStorage.setItem('jobList', JSON.stringify(savedJobId));
+            }
+            
         }
 	}
 }
 
 class Fetch {
+
 	fetchList(urlEnding) {
 		return fetch(`http://api.arbetsformedlingen.se/af/v0${urlEnding}`)
 			.then((response) => response.json())
@@ -189,19 +249,30 @@ class Fetch {
 	}
 
 	fetchSavedAds(saveAds) {
-
-		let jobArray = [];
+        if(saveAds != null){		
+    let jobArray = [];
 		for (let adUrl of saveAds) {
-			fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
+			fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`)
+              .then((response) => {
+                console.log(response.status);
+                  if(!response.ok){
+                    throw Error(response.status);
+                      
+                  }
+				return response;
+			})
+                .then((response) => {
 				return response.json();
-			}).then((job) => {
-				jobArray.push(job)
+			})
+                .then((job) => {
+                jobArray.push(job);
 				newDOM.displaySavedAds(jobArray)
 			}).catch((error) => {
 				console.log(error);
 			})
 
 		}
+}
 	}
 }
 
@@ -246,7 +317,7 @@ class DOM {
 
         const autoCompleteUl = document.createElement('ul');
         const autoCompleteOutput = document.getElementById('autoCompleteOutput');
-        autoCompleteOutput.appendChild(autoCompleteUl)
+        autoCompleteOutput.appendChild(autoCompleteUl);
         let searchDrafts = '';
         
         if (autoCompleteWords.soklista.totalt_antal_platsannonser === 0){
@@ -270,7 +341,7 @@ class DOM {
 
 	displayListed(latestJobs) {
         const outputListJobs = document.getElementById('outputListJobs');
-        
+       
         if(latestJobs.matchningslista.antal_platsannonser){
             newDOM.displayAmountOfJobs(latestJobs);
 
@@ -282,12 +353,7 @@ class DOM {
             for (let i = 0; i < jobDataLength; i++) {
 
                 const date = jobData[i].sista_ansokningsdag;
-                let formatedDate = '';
-                if (!date) {
-                    formatedDate = 'Öppen';
-                } else {
-                    formatedDate = date.substring(0, 10);
-                }
+                let formatedDate = newController.formatDate(date);
 
                 const latestJob = document.createElement('div');
                 latestJob.classList.add('latestJobs');
@@ -300,10 +366,14 @@ class DOM {
                     <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
                 `;
                 outputListJobs.appendChild(latestJob);
+                
+                localStorage.setItem('backUrl', window.location.href);
 
                 let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
                 readMoreButton.addEventListener('click', () => {  
-                    location.reload();
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);
                     newController.addToUrl(`?annonsid=${jobData[i].annonsid}`)
                 });
             }
@@ -315,6 +385,7 @@ class DOM {
 	}
     
 	displaySavedAds(jobArray) {
+        
 		const outputSavedJobs = document.getElementById('outputSavedJobs');
 		outputSavedJobs.innerHTML = '';
 		const savedAdsList = document.createElement('ul');
@@ -333,10 +404,28 @@ class DOM {
 
 			let savedAdButton = document.getElementById(`savedAd${saveAd.annonsid}`);
 			savedAdButton.addEventListener('click', function () {
-                location.reload();
+                setTimeout(function(){
+                  window.location.reload();
+                }, 500);
                 newController.addToUrl(`?annonsid=${saveAd.annonsid}`);
 			});
 		}
+//        const clearButton = document.createElement('button');
+//        clearButton.setAttribute("id","clearButton");
+//        textnode = document.createTextNode("Ta bort mina sparade text annonser"); 
+//        clearButton.appendChild(textnode); 
+        
+        //let clearButton = document.getElementById('clearButton');
+        
+        let clearButton = document.createElement('button');
+        clearButton.setAttribute("id", "clearButton");
+        let textnode = document.createTextNode("Ta bort mina sparade text annonser"); 
+        clearButton.appendChild(textnode); 
+        
+        savedAdsList.appendChild(clearButton);
+        newController.clearLocalStorageButtonEventlistener(clearButton); 
+       
+         
 	}
     
     pagination(latestJobs){    
@@ -347,16 +436,22 @@ class DOM {
         pageNumberDiv.innerHTML = `${currentPageNumber} av ${latestJobs.matchningslista.antal_sidor}`;
         newController.paginationButtons(totalAmountOfPages);     
     }
-     
+   
+
     displaySingleJobPost(jobDetails){
         console.log(jobDetails);
-
+        //alert(backUrl);
         const outputSingleJobPost = document.getElementById('jobDetails');
         const headline = document.getElementById('headline');
 
         const singleJobDetails = jobDetails.platsannons.annons;
+        const applicationDetails = jobDetails.platsannons.ansokan;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
         const employmentConditions = jobDetails.platsannons.villkor;
+        
+        const date = applicationDetails.sista_ansokningsdag;
+        let formatedDate = newController.formatDate(date);
+        
         const jobId = jobDetails.platsannons.annons.annonsid;
         outputListJobs.innerHTML = `
             <div class="jobDetails">
@@ -364,17 +459,29 @@ class DOM {
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
                 <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
+
                 <h2>${singleJobDetails.annonsrubrik}</h2>
                 <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
+                <p><strong>Antal platser:</strong> ${singleJobDetails.antal_platser} </p>
                 <p>${singleJobDetails.annonstext}</p>
                 <p>${workplaceDetails.arbetsplatsnamn}</p>
-                <p>${singleJobDetails.anstallningstyp}</p>
+
+                <h3>Villkor</h3>
+                <p><strong>Anställningsform:</strong> ${employmentConditions.arbetstid}</p>
+                <p><strong>Lön:</strong> ${employmentConditions.lonetyp}</p>
+
+                <h3>Ansökan</h3>
+                <p><strong>Sista ansökningsdag:</strong> ${formatedDate}</p>
+                <p><a href="${applicationDetails.webbplats}">Ansök här</a></p>
             </div>
         `;
         
         let backButton = document.getElementById('backButton');
 		backButton.addEventListener('click', function () {
-            //BAck button
+            //Back button
+            let backUrl = localStorage.getItem('backUrl');
+            document.location.assign(backUrl);
+            localStorage.removeItem('backUrl');
         })
         let saveAdButton = document.getElementById('saveAdButton');
 		saveAdButton.addEventListener('click', function () {
