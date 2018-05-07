@@ -18,6 +18,7 @@ class Init {
         newController.searchField();
         newController.shareListing();
         newController.savedAdsButtonEventlistener();
+        newController.clearLocalStorageButtonEventlistener();
         //Fetching values for options in filter.
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`).then(newDOM.displayFilterOptions);
         newFetch.fetchList(`/arbetsformedling/soklista/lan`).then(newDOM.displayFilterOptions);     
@@ -152,11 +153,21 @@ class Controller {
 	savedAdsButtonEventlistener() {
 		const displaySavedAdsButton = document.getElementById('savedAds');
         
-		displaySavedAdsButton.addEventListener('click', () => {
+        displaySavedAdsButton.addEventListener('click', () => {
 			let savedAds = JSON.parse(localStorage.getItem('jobList'));
 			newFetch.fetchSavedAds(savedAds)
 		})
 	}
+    
+    clearLocalStorageButtonEventlistener() {
+		const displayClearLocalStorageButton = document.getElementById('clear');
+        
+		displayClearLocalStorageButton.addEventListener('click', () => {
+            localStorage.removeItem('jobList');
+		})
+	}
+    
+  
     
     shareButtonEventListener(){
 		const shareButton = document.getElementById('shareButton');
@@ -176,8 +187,11 @@ class Save {
             localStorage.setItem('jobList', JSON.stringify(jobIdArray));
         }    
         else {
-            savedJobId.push(id);
-            localStorage.setItem('jobList', JSON.stringify(savedJobId));
+            if(!savedJobId.includes(id)){
+                savedJobId.push(id);
+                localStorage.setItem('jobList', JSON.stringify(savedJobId));
+            }
+            
         }
 	}
 }
