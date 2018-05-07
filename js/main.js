@@ -160,11 +160,38 @@ class Controller {
 	}
     
     clearLocalStorageButtonEventlistener() {
-		const displayClearLocalStorageButton = document.getElementById('clear');
+		//const displayClearLocalStorageButton = document.getElementById('clearButton');
         
-		displayClearLocalStorageButton.addEventListener('click', () => {
-            localStorage.removeItem('jobList');
-		})
+        //const displayClearLocalStorageButton = document.createElement('button');
+        //const displayClearLocalStorageButton = document.getElementById('clearButton');
+        
+       // displayClearLocalStorageButton.onclick = alert("hej!");
+//        displayClearLocalStorageButton.setAttribute("id", "clearButton");
+//        let textnode = document.createTextNode("Ta bort mina sparade text annonser"); 
+//        displayClearLocalStorageButton.appendChild(textnode); 
+       
+       // let clearButton = document.getElementById('clearButton');
+//		displayClearLocalStorageButton.addEventListener('click', () => {
+//          //e.target(alert("hej!"));
+//            //alert(e.target.nodeName);
+//      
+//            localStorage.removeItem('jobList');
+//		})
+        
+           
+//        var target = event.target || event.srcElement;
+//var id = target.id
+
+        document.addEventListener('click', function (event) {
+            var clickedElem = event.target;
+            
+            if(clickedElem.id !== 'clearButton'){
+                return;
+            }else{
+                 localStorage.removeItem('jobList');
+            }
+
+        }, false);
 	}
     
   
@@ -210,14 +237,15 @@ class Fetch {
 	}
 
 	fetchSavedAds(saveAds) {
-
-		let jobArray = [];
+        if(saveAds != null){		
+    let jobArray = [];
 		for (let adUrl of saveAds) {
 			fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`)
               .then((response) => {
                 console.log(response.status);
                   if(!response.ok){
                     throw Error(response.status);
+                      
                   }
 				return response;
 			})
@@ -232,6 +260,7 @@ class Fetch {
 			})
 
 		}
+}
 	}
 }
 
@@ -276,7 +305,7 @@ class DOM {
 
         const autoCompleteUl = document.createElement('ul');
         const autoCompleteOutput = document.getElementById('autoCompleteOutput');
-        autoCompleteOutput.appendChild(autoCompleteUl)
+        autoCompleteOutput.appendChild(autoCompleteUl);
         let searchDrafts = '';
         
         if (autoCompleteWords.soklista.totalt_antal_platsannonser === 0){
@@ -349,6 +378,7 @@ class DOM {
 	}
     
 	displaySavedAds(jobArray) {
+        
 		const outputSavedJobs = document.getElementById('outputSavedJobs');
 		outputSavedJobs.innerHTML = '';
 		const savedAdsList = document.createElement('ul');
@@ -371,6 +401,22 @@ class DOM {
                 newController.addToUrl(`?annonsid=${saveAd.annonsid}`);
 			});
 		}
+//        const clearButton = document.createElement('button');
+//        clearButton.setAttribute("id","clearButton");
+//        textnode = document.createTextNode("Ta bort mina sparade text annonser"); 
+//        clearButton.appendChild(textnode); 
+        
+        //let clearButton = document.getElementById('clearButton');
+        
+        let clearButton = document.createElement('button');
+        clearButton.setAttribute("id", "clearButton");
+        let textnode = document.createTextNode("Ta bort mina sparade text annonser"); 
+        clearButton.appendChild(textnode); 
+        
+        savedAdsList.appendChild(clearButton);
+        newController.clearLocalStorageButtonEventlistener(clearButton); 
+       
+         
 	}
     
     pagination(latestJobs){    
