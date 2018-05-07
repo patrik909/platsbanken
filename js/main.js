@@ -197,6 +197,7 @@ class Save {
 }
 
 class Fetch {
+
 	fetchList(urlEnding) {
 		return fetch(`http://api.arbetsformedlingen.se/af/v0${urlEnding}`)
 			.then((response) => response.json())
@@ -212,10 +213,19 @@ class Fetch {
 
 		let jobArray = [];
 		for (let adUrl of saveAds) {
-			fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`).then((response) => {
+			fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`)
+              .then((response) => {
+                console.log(response.status);
+                  if(!response.ok){
+                    throw Error(response.status);
+                  }
+				return response;
+			})
+                .then((response) => {
 				return response.json();
-			}).then((job) => {
-				jobArray.push(job)
+			})
+                .then((job) => {
+                jobArray.push(job);
 				newDOM.displaySavedAds(jobArray)
 			}).catch((error) => {
 				console.log(error);
