@@ -371,12 +371,18 @@ class DOM {
                 <input id="displayUrl" class="hidden" value="" />
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
                 <h2>${singleJobDetails.annonsrubrik}</h2>
-                <p><strong>${singleJobDetails.antal_platser} ${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
+                <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
+                <p><strong>Antal platser:</strong> ${singleJobDetails.antal_platser} </p>
                 <p>${singleJobDetails.annonstext}</p>
                 <p>${workplaceDetails.arbetsplatsnamn}</p>
+
                 <h3>Villkor</h3>
                 <p><strong>Anställningsform:</strong> ${employmentConditions.arbetstid}</p>
+                <p><strong>Lön:</strong> ${employmentConditions.lonetyp}</p>
+
+                <h3>Ansökan</h3>
                 <p><strong>Sista ansökningsdag:</strong> ${formatedDate}</p>
+                <p><a href="${applicationDetails.webbplats}">Ansök här</a></p>
             </div>
         `;
         
