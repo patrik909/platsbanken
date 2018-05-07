@@ -101,7 +101,7 @@ class Controller {
 			});
 		}
 		document.addEventListener('click', () => {
-            //Closes the div if user clicks outside the div.
+            //Closes the autoCompleteDiv if user clicks outside the div.
 			autoCompleteOutput.innerHTML = '';
 		})
 
@@ -150,7 +150,7 @@ class Controller {
 		})
 	}
     
-    shareButtonEventListener(){
+    shareButtonEventListener() {
 		const shareButton = document.getElementById('shareButton');
         
 		shareButton.addEventListener('click', newDOM.displayUrl);
@@ -212,8 +212,13 @@ class DOM {
 		const amountOfJobsDiv = document.getElementById('amountOfJobs');
 		const county = latestJobs.matchningslista.matchningdata[0].lan;
 		const amountOfJobs = latestJobs.matchningslista.antal_platsannonser;
+        
+        let word = 'matchade jobb'; 
+        if (!url.includes('nyckelord')) {
+            word = `jobb i ${county}`;
+        }
 
-		const amountOfJobsContent = `<p> Antal jobb i <span>${county}:</span> ${amountOfJobs}`;
+		const amountOfJobsContent = `<p> Antal ${word}: ${amountOfJobs}`;
 		amountOfJobsDiv.innerHTML = amountOfJobsContent;
 	}
 
@@ -221,7 +226,7 @@ class DOM {
         let optionOutput = ''
         let optionsToList = optionsValue.soklista.listnamn
         let options = '';
-        //console.log(option.namn)
+        
 		for (let option of optionsValue.soklista.sokdata) {
 			const optionID = option.id;
 			const optionName = option.namn;
@@ -240,7 +245,7 @@ class DOM {
 		optionOutput.innerHTML = options;
 	}
     
-    displayAutoComplete(autoCompleteWords){
+    displayAutoComplete(autoCompleteWords) {
 
         const autoCompleteUl = document.createElement('ul');
         const autoCompleteOutput = document.getElementById('autoCompleteOutput');
@@ -335,7 +340,7 @@ class DOM {
 		}
 	}
     
-    pagination(latestJobs){    
+    pagination(latestJobs) {    
         const currentPageNumber = (new URL(document.location)).searchParams.get("sida");
         const pageNumberDiv = document.getElementById('pageNumber');
         const totalAmountOfPages = latestJobs.matchningslista.antal_sidor
@@ -344,8 +349,7 @@ class DOM {
         newController.paginationButtons(totalAmountOfPages);     
     }
      
-    displaySingleJobPost(jobDetails){
-        console.log(jobDetails);
+    displaySingleJobPost(jobDetails) {
 
         const outputSingleJobPost = document.getElementById('jobDetails');
         const headline = document.getElementById('headline');
@@ -381,7 +385,7 @@ class DOM {
 
 	}
     
-	displayUrl(){
+	displayUrl() {
 		const displayUrl = document.getElementById('displayUrl');
 		displayUrl.classList.toggle('hidden');
 		displayUrl.value = url;
