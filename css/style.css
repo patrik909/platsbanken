@@ -166,13 +166,14 @@ main{
     border-radius: 4px;
 }
 
-#outputShareListing {
+#outputShareSearchResult {
     font-size: inherit; 
     max-width: 914px;
     width: 100%;
     padding: 12px 0 12px 12px;
     border-color: #00358c;
     border-radius: 4px;
+    margin-bottom: 12px;
 }
 
 .latestJobs button, .jobDetails button, .outputSavedJobs button {
@@ -237,7 +238,7 @@ main{
     padding: 0 20px;
 }
 
-#shareListingButton {
+#shareSearchResultButton {
     background: #00358c;
     color: white;
     padding: 10px 20px;
@@ -250,12 +251,8 @@ main{
     transition: 200ms;
 }
 
-#shareListingButton:hover{
+#shareSearchResultButton:hover{
     background: #0049c1; 
-}
-
-#outputShareListing {
-    margin-bottom: 12px;
 }
 
 #savedAds {
