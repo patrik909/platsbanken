@@ -18,7 +18,7 @@ button {
     outline: none;
 }
 
-input {
+input {
     outline: none;
 }
 
@@ -119,7 +119,7 @@ h1{
     font-weight: 900;
 }
 .searchDraft:hover{
-    background: rgba(225,225,225); 
+    background: rgb(225,225,225); 
 }
 
 /* ---- MAIN STYLING ---- */
