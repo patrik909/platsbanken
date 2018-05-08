@@ -146,6 +146,15 @@ class Controller {
         });
     }
 
+    closePopup(){
+        window.onclick = function(event) {
+            if (event.target === savedJobsPopupBackground || event.target === sharePopupBackground) {
+                savedJobsPopupBackground.style.display = 'none';
+                sharePopupBackground.style.display = 'none';
+            }
+        }
+    }
+    
     shareSearchResult() {
         const shareSearchResultButton = document.getElementById('shareSearchResultButton');
         shareSearchResultButton.addEventListener('click', newDOM.displayUrl);
@@ -161,11 +170,12 @@ class Controller {
             const savedJobsPopupBackground = document.getElementById('savedJobsPopupBackground');
             savedJobsPopupBackground.style.display = 'flex';
             
-            window.onclick = function(event) {
-                if (event.target === savedJobsPopupBackground) {
-                    savedJobsPopupBackground.style.display = 'none';
-                }
-            }
+            newController.closePopup();
+//            window.onclick = function(event) {
+//                if (event.target === savedJobsPopupBackground) {
+//                    savedJobsPopupBackground.style.display = 'none';
+//                }
+//            }
 		});
 	}
     
@@ -432,7 +442,6 @@ class DOM {
             <div class="jobDetails">
                 <button id="backButton">Tillbaka</button>
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
-                <button id="shareButton">Dela</button>
                 <input id="displayUrl" class="hidden" value="" />
 
                 <h2>${singleJobDetails.annonsrubrik}</h2>
@@ -462,9 +471,6 @@ class DOM {
         saveAdButton.addEventListener('click', function() {
             newSave.saveAdToBrowser(this.dataset.id);
         });
-
-        //newController.shareButtonEventListener();
-        newController.shareSearchResult();
     }
 
     displayUrl() {
@@ -475,11 +481,7 @@ class DOM {
         sharePopupBackground.style.display = 'flex';
         outputShareSearchResult.style.display = 'block';
         
-        window.onclick = function(event) {
-            if (event.target == sharePopupBackground) {
-                sharePopupBackground.style.display = 'none';
-            }
-        }
+        newController.closePopup();
     }
 }
 
