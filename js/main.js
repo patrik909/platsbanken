@@ -148,12 +148,13 @@ class Controller {
 
     shareSearchResult() {
         const shareSearchResultButton = document.getElementById('shareSearchResultButton');
-        const outputShareSearchResult = document.getElementById('outputShareSearchResult');
+        shareSearchResultButton.addEventListener('click', newDOM.displayUrl);
         
-        shareSearchResultButton.addEventListener('click', () => {
-            outputShareSearchResult.value = window.location.href;
-            outputShareSearchResult.classList.toggle('hidden');
-        });
+//        window.onclick = function(event) {
+//            if (event.target == popupBackground) {
+//                popupBackground.style.display = 'none';
+//            }
+//        }
     }
 
 	savedAdsButtonEventlistener() {
@@ -460,13 +461,23 @@ class DOM {
             newSave.saveAdToBrowser(this.dataset.id);
         });
 
-        newController.shareButtonEventListener();
+        //newController.shareButtonEventListener();
+        newController.shareSearchResult();
     }
 
     displayUrl() {
-        const displayUrl = document.getElementById('displayUrl');
-        displayUrl.classList.toggle('hidden');
-        displayUrl.value = url;
+        const outputShareSearchResult = document.getElementById('outputShareSearchResult');
+        const popupBackground = document.getElementById('popupBackground');
+        
+        outputShareSearchResult.value = url;
+        popupBackground.style.display = 'flex';
+        outputShareSearchResult.style.display = 'block';
+        
+        window.onclick = function(event) {
+            if (event.target == popupBackground) {
+                popupBackground.style.display = 'none';
+            }
+        }
     }
 }
 
