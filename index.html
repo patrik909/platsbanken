@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Platsbanken</title>
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,900" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -51,17 +52,22 @@
             <div id="pageNumber"></div>
             <button id="nextPage"><img src="images/right.svg" alt="Arrow pointing right"></button>
         </div>
+        
         <button id="shareSearchResultButton">
             Dela sökning
         </button>
-        <input id="outputShareSearchResult" class="hidden" value="" />
         
+        <div class="popupBackground" id="sharePopupBackground">
+            <input id="outputShareSearchResult" class="hidden" value="" />
+        </div>
         
         <button id="savedAds">
-            Mina sparade jobbannonser
+            Mina sparade annonser
         </button>
         
-        <div id="outputSavedJobs" class="hidden outputSavedJobs"></div>
+        <div class="popupBackground" id="savedJobsPopupBackground">
+            <div id="outputSavedJobs" class="hidden outputSavedJobs"></div>
+        </div>
         
     </main>
     <footer></footer>
