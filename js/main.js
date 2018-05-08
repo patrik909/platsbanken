@@ -171,11 +171,6 @@ class Controller {
             savedJobsPopupBackground.style.display = 'flex';
             
             newController.closePopup();
-//            window.onclick = function(event) {
-//                if (event.target === savedJobsPopupBackground) {
-//                    savedJobsPopupBackground.style.display = 'none';
-//                }
-//            }
 		});
 	}
     
@@ -189,12 +184,7 @@ class Controller {
                 localStorage.removeItem('savedJobsList');
             }
         }, false);
-    }
-    
-//    shareButtonEventListener() {
-//		const shareButton = document.getElementById('shareButton');
-//		shareButton.addEventListener('click', newDOM.displayUrl);
-//	}  
+    } 
     
     countyDropdownEventlistener() {   
         const filterTown = document.getElementById('filterTown');
