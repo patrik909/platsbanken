@@ -149,12 +149,6 @@ class Controller {
     shareSearchResult() {
         const shareSearchResultButton = document.getElementById('shareSearchResultButton');
         shareSearchResultButton.addEventListener('click', newDOM.displayUrl);
-        
-//        window.onclick = function(event) {
-//            if (event.target == popupBackground) {
-//                popupBackground.style.display = 'none';
-//            }
-//        }
     }
 
 	savedAdsButtonEventlistener() {
@@ -163,7 +157,15 @@ class Controller {
         displaySavedAdsButton.addEventListener('click', () => {
 			let savedAds = JSON.parse(localStorage.getItem('savedJobsList'));
             newFetch.fetchSavedAds(savedAds);
-            outputSavedJobs.classList.toggle('hidden');
+            outputSavedJobs.style.display = 'block';
+            const savedJobsPopupBackground = document.getElementById('savedJobsPopupBackground');
+            savedJobsPopupBackground.style.display = 'flex';
+            
+            window.onclick = function(event) {
+                if (event.target === savedJobsPopupBackground) {
+                    savedJobsPopupBackground.style.display = 'none';
+                }
+            }
 		});
 	}
     
@@ -179,10 +181,10 @@ class Controller {
         }, false);
     }
     
-    shareButtonEventListener() {
-		const shareButton = document.getElementById('shareButton');
-		shareButton.addEventListener('click', newDOM.displayUrl);
-	}  
+//    shareButtonEventListener() {
+//		const shareButton = document.getElementById('shareButton');
+//		shareButton.addEventListener('click', newDOM.displayUrl);
+//	}  
     
     countyDropdownEventlistener() {   
         const filterTown = document.getElementById('filterTown');
@@ -378,7 +380,7 @@ class DOM {
 		const savedAdsList = document.createElement('ul');
 		const jobDataLength = jobArray.length;
 
-        outputSavedJobs.innerHTML = `<h3>Sparade jobbannonser</h3>`;
+        outputSavedJobs.innerHTML = `<h2>Sparade jobbannonser</h2>`;
 
 		for (let i = 0; i < jobDataLength; i++) {
 			const listElement = document.createElement('li');
@@ -401,7 +403,7 @@ class DOM {
         let textnode = document.createTextNode("Ta bort mina sparade annonser"); 
         clearSavedAdsButton.appendChild(textnode); 
         
-        savedAdsList.appendChild(clearSavedAdsButton);
+        outputSavedJobs.appendChild(clearSavedAdsButton);
         newController.clearLocalStorageButtonEventlistener(clearSavedAdsButton); 
 	}
 
@@ -467,15 +469,15 @@ class DOM {
 
     displayUrl() {
         const outputShareSearchResult = document.getElementById('outputShareSearchResult');
-        const popupBackground = document.getElementById('popupBackground');
+        const sharePopupBackground = document.getElementById('sharePopupBackground');
         
         outputShareSearchResult.value = url;
-        popupBackground.style.display = 'flex';
+        sharePopupBackground.style.display = 'flex';
         outputShareSearchResult.style.display = 'block';
         
         window.onclick = function(event) {
-            if (event.target == popupBackground) {
-                popupBackground.style.display = 'none';
+            if (event.target == sharePopupBackground) {
+                sharePopupBackground.style.display = 'none';
             }
         }
     }

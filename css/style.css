@@ -147,6 +147,10 @@ main{
     margin-bottom: 10px;
 }
 
+.outputSavedJobs{
+    background: #fff;
+}
+
 .latestJobs h3, .jobDetails h3 {
     font-size: 1.3em;
     font-weight: 900;
@@ -194,12 +198,17 @@ main{
 }
 
 .outputSavedJobs button {
-    padding: 5px 10px
+    padding: 5px 10px;
 }
 
 .outputSavedJobs {
     margin-top: 16px;
 }
+
+.outputSavedJobs h2{
+    margin: 0;
+}
+
 .outputSavedJobs ul {
     list-style: none;
     padding: 0;
@@ -209,7 +218,7 @@ main{
     margin-bottom: 8px;
 }
 
-.outputSavedJobs button {
+.outputSavedJobs ul li button {
     margin-left: 8px;
 }
 
