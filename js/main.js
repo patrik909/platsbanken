@@ -337,7 +337,6 @@ class DOM {
                 }
             } 
         } else {
-
             optionOutput = document.getElementById('filterTown');
             optionOutput.innerHTML = '<option class="townItem" value="0">Hela länet</option>' + options;
         }
