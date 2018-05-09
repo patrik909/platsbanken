@@ -359,6 +359,7 @@ class DOM {
             
            
 
+
             for (let i = 0; i < jobDataLength; i++) {
 
                 const date = jobData[i].sista_ansokningsdag;
@@ -376,7 +377,6 @@ class DOM {
                 `;
                 outputListJobs.appendChild(latestJob);
             }
-             
             
             newController.showSingleJobEventListener();    
             newDOM.pagination(latestJobs);
