@@ -356,6 +356,8 @@ class DOM {
             let listedJobs = '';
             outputListJobs.innerHTML = '';
             const jobDataLength = jobData.length;
+            
+           
 
 
             for (let i = 0; i < jobDataLength; i++) {
@@ -374,13 +376,11 @@ class DOM {
                     <button type="button" class="readMoreButton" id="${jobData[i].annonsid}">Läs mer!</button>
                 `;
                 outputListJobs.appendChild(latestJob);
-                
-                localStorage.setItem('previousUrl', window.location.href);
-
             }
             
             newController.showSingleJobEventListener();    
             newDOM.pagination(latestJobs);
+            localStorage.setItem('previousUrl', window.location.href);
         } else {
             outputListJobs.innerHTML = 'Inga matchade jobb';
         }
