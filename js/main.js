@@ -45,15 +45,6 @@ class Controller {
         return formatedDate;
     }
     
-    disableEnter() {
-        this.searchFieldElements();
-        searchFieldInput.addEventListener('keydown', function(event){
-            if(event.keyCode === 13){
-                event.preventDefault();
-            }
-        })    
-    }
-    
     checkUrlEnding() {
         // Separates url from query parameters
         const urlSeparator = '?';
