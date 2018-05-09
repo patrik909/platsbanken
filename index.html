@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Platsbanken</title>
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,900" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -33,9 +34,9 @@
             </div>
             <div id="lowerForm">
             
-                <input type="text" id="searchJobsInput" autocomplete="off">
-                <button type="button" id="searchJobsButton">
-                    <img src="images/search.svg">
+                <input type="text" id="searchFieldInput" autocomplete="off">
+                <button type="button" id="searchFieldButton">
+                    <img src="images/search.svg" alt="Magnifying glass">
                 </button>
             </div> 
             <div id="autoCompleteOutput"></div> 
@@ -47,21 +48,26 @@
             <div id="outputJobURL"></div>
         </div>
         <div id="pagineringWrapper">
-            <button id="previousPage"><img src="images/left.svg"></button>
+            <button id="previousPage"><img src="images/left.svg" alt="Arrow pointing left"></button>
             <div id="pageNumber"></div>
-            <button id="nextPage"><img src="images/right.svg"></button>
+            <button id="nextPage"><img src="images/right.svg" alt="Arrow pointing right"></button>
         </div>
-        <button id="shareListingButton">
-            Dela listning
-        </button>
-        <input id="outputShareListing" class="hidden" value="" />
         
+        <button id="shareSearchResultButton">
+            Dela
+        </button>
+        
+        <div class="popupBackground" id="sharePopupBackground">
+            <input id="outputShareSearchResult" class="hidden" value="" />
+        </div>
         
         <button id="savedAds">
-            Mina sparade jobbannonser
+            Sparade annonser
         </button>
         
-        <div id="outputSavedJobs" class="hidden outputSavedJobs"></div>
+        <div class="popupBackground" id="savedJobsPopupBackground">
+            <div id="outputSavedJobs" class="hidden outputSavedJobs"></div>
+        </div>
         
     </main>
     <footer></footer>
