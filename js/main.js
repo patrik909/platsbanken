@@ -417,8 +417,6 @@ class DOM {
     }
 
     displaySingleJobPost(jobDetails) {
-        const outputSingleJobPost = document.getElementById('jobDetails');
-
         const singleJobDetails = jobDetails.platsannons.annons;
         const applicationDetails = jobDetails.platsannons.ansokan;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
