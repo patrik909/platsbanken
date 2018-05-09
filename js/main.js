@@ -170,9 +170,10 @@ class Controller {
 
     closePopup(){
         window.onclick = function(event) {
-            if (event.target === savedJobsPopupBackground || event.target === sharePopupBackground) {
+            if (event.target === savedJobsPopupBackground || event.target === sharePopupBackground || event.target === errorMessagePopupBackground) {
                 savedJobsPopupBackground.style.display = 'none';
                 sharePopupBackground.style.display = 'none';
+                errorMessagePopupBackground.style.display = 'none';
             }
         }
     }
@@ -259,7 +260,7 @@ class Fetch {
 				return fetchResult;
 			})
             .catch((error) => {
-				console.log(error);
+				newDOM.displayErrorMessage(error);
 			});
 	}
 
@@ -282,7 +283,7 @@ class Fetch {
                     newDOM.displaySavedAds(jobArray)
                 })
                 .catch((error) => {
-                    console.log(error);
+                    newDOM.displayErrorMessage(error);
                 });
             }
         }
@@ -461,18 +462,15 @@ class DOM {
             <div class="jobDetails">
                 <button id="backButton">Tillbaka</button>
                 <button id='saveAdButton' data-id='${jobId}'>Spara</button>
-                <input id="displayUrl" class="hidden" value="" />
-
+                <span id="saveMessage" class="hidden saveMessage"><i class="fas fa-check-circle"></i> Sparat</span>
                 <h2>${singleJobDetails.annonsrubrik}</h2>
                 <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
                 <p><strong>Antal platser:</strong> ${singleJobDetails.antal_platser} </p>
                 <p class="singleJobText">${singleJobDetails.annonstext}</p>
                 <p>${workplaceDetails.arbetsplatsnamn}</p>
-
                 <h3>Villkor</h3>
                 <p><strong>Anställningsform:</strong> ${employmentConditions.arbetstid}</p>
                 <p><strong>Lön:</strong> ${employmentConditions.lonetyp}</p>
-
                 <h3>Ansökan</h3>
                 <p><strong>Sista ansökningsdag:</strong> ${formatedDate}</p>
                 <p><a href="${applicationDetails.webbplats}">Ansök här</a></p>
@@ -489,6 +487,7 @@ class DOM {
         const saveAdButton = document.getElementById('saveAdButton');
         saveAdButton.addEventListener('click', function() {
             newSave.saveAdToBrowser(this.dataset.id);
+            newDOM.displaySaveMessage();
         });
     }
 
@@ -501,6 +500,25 @@ class DOM {
         outputShareSearchResult.style.display = 'block';
         
         newController.closePopup();
+    }
+    
+    displayErrorMessage(error) {
+        const outputErrorMessage = document.getElementById('outputErrorMessage');
+        const errorMessagePopupBackground = document.getElementById('errorMessagePopupBackground')
+        outputErrorMessage.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Hoppsan! Något gick fel</h3>
+            <p>Det verkar som vi inte får kontakt med servern. Testa att ladda om sidan.</p>
+        `;
+        errorMessagePopupBackground.style.display = 'flex';
+        outputErrorMessage.style.display = 'block';
+
+        newController.closePopup();
+    }
+    
+    displaySaveMessage() {
+        const saveMessage = document.getElementById('saveMessage');
+        saveMessage.style.display = 'inline-block';
     }
 }
 

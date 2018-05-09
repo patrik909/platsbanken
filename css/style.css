@@ -143,7 +143,7 @@ main{
     font-weight: 600;
 }
 
-.latestJobs, .jobDetails, .outputSavedJobs {
+.latestJobs, .jobDetails, .outputSavedJobs, .outputErrorMessage {
     background: #e5e5e5;
     border-radius: 10px;
     padding: 40px;
@@ -182,7 +182,7 @@ main{
     box-shadow: 0px 0px 10px #3c3c3c;
 }
 
-.latestJobs button, .jobDetails button, .outputSavedJobs button {
+.latestJobs button, .jobDetails button, .outputSavedJobs button, .saveMessage  {
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 700;
@@ -223,6 +223,40 @@ main{
 
 .outputSavedJobs ul li button {
     margin-left: 8px;
+}
+
+.outputErrorMessage {
+    background: #fff;
+    border-left: 10px solid #990000;
+    margin: initial;
+}
+
+.fa-exclamation-triangle {
+    color: #990000;
+    font-size: 2em;
+}
+
+.saveMessage {
+    font-size: 0.79em;
+    background: #008536;
+
+    animation:saveMessage 3s 1;
+    -webkit-animation:saveMessage 2s 1;
+    animation-fill-mode: forwards;
+
+    animation-delay: 3s;
+    -webkit-animation-delay: 1s;
+    -webkit-animation-fill-mode: forwards;
+}
+
+@keyframes saveMessage{
+    from {opacity :1;}
+    to {opacity :0;}
+}
+
+@-webkit-keyframes saveMessage{
+    from {opacity :1;}
+    to {opacity :0;}
 }
 
 #pagineringWrapper{
