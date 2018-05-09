@@ -6,7 +6,6 @@ class Init {
         newController.searchField();
         newController.shareSearchResult();
         newController.savedAdsButtonEventlistener();
-        newController.clearLocalStorageButtonEventlistener();
         //Fetching values for options in filter.
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`)
             .then(newDOM.displayFilterOptions);
@@ -176,12 +175,14 @@ class Controller {
     
     clearLocalStorageButtonEventlistener() {
         document.addEventListener('click', function (event) {
-            var clickedElem = event.target;
+            let clickedElem = event.target;
             
             if (clickedElem.id !== 'clearButton') {
                 return;
             } else {
                 localStorage.removeItem('savedJobsList');
+                let outputSavedJobs = document.getElementById('outputSavedJobs');
+                outputSavedJobs.innerText = "Annonserna är borttagna!";
             }
         }, false);
     } 
@@ -193,6 +194,19 @@ class Controller {
             newFetch.fetchList(`/platsannonser/soklista/kommuner?lanid=${filterCounty.value}`)
                 .then(newDOM.displayFilterOptions)
         });
+    }
+    
+    showSingleJobEventListener() {
+        const outputListJobs = document.getElementById('outputListJobs');
+        outputListJobs.addEventListener('click', function (event) {
+            let clickedElem = event.target;
+
+            if (clickedElem.className === 'readMoreButton') {
+                let countyID = (new URL(document.location)).searchParams.get('lanid');
+                newController.delayReload();
+                newController.addToUrl(`?annonsid=${clickedElem.id}&lanid=${countyID}`);
+            }
+        }, false);
     }
 }
 
@@ -328,7 +342,10 @@ class DOM {
         }
     }
 
+    
     displayListed(latestJobs) {
+
+        
         const outputListJobs = document.getElementById('outputListJobs');
 
         if (latestJobs.matchningslista.antal_platsannonser) {
@@ -339,6 +356,7 @@ class DOM {
             let listedJobs = '';
             outputListJobs.innerHTML = '';
             const jobDataLength = jobData.length;
+
 
             for (let i = 0; i < jobDataLength; i++) {
 
@@ -353,20 +371,15 @@ class DOM {
                     <p>${jobData[i].arbetsplatsnamn}</p>
                     <p>${jobData[i].anstallningstyp}</p>
                     <p><span>Sista ansökningsdag:</span> ${formatedDate}</p>
-                    <button type="button" id="${jobData[i].annonsid}">Läs mer!</button>
+                    <button type="button" class="readMoreButton" id="${jobData[i].annonsid}">Läs mer!</button>
                 `;
                 outputListJobs.appendChild(latestJob);
                 
                 localStorage.setItem('previousUrl', window.location.href);
 
-                let readMoreButton = document.getElementById(`${jobData[i].annonsid}`);
-                let countyID = (new URL(document.location)).searchParams.get('lanid');
-
-                readMoreButton.addEventListener('click', () => {  
-                    newController.delayReload();
-                    newController.addToUrl(`?annonsid=${jobData[i].annonsid}&lanid=${countyID}`);
-                });
             }
+            
+            newController.showSingleJobEventListener();    
             newDOM.pagination(latestJobs);
         } else {
             outputListJobs.innerHTML = 'Inga matchade jobb';
