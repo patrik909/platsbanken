@@ -143,7 +143,7 @@ main{
     font-weight: 600;
 }
 
-.latestJobs, .jobDetails, .outputSavedJobs {
+.latestJobs, .jobDetails, .outputSavedJobs, .outputErrorMessage {
     background: #e5e5e5;
     border-radius: 10px;
     padding: 40px;
@@ -223,6 +223,17 @@ main{
 
 .outputSavedJobs ul li button {
     margin-left: 8px;
+}
+
+.outputErrorMessage {
+    background: #fff;
+    border-left: 10px solid #990000;
+    margin: initial;
+}
+
+.fa-exclamation-triangle {
+    color: #990000;
+    font-size: 2em;
 }
 
 #pagineringWrapper{
