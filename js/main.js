@@ -228,11 +228,11 @@ class Controller {
     
     showSingleJobEventListener() {
         const outputListJobs = document.getElementById('outputListJobs');
+        let countyID = (new URL(document.location)).searchParams.get('lanid');
         outputListJobs.addEventListener('click', function (event) {
             let clickedElem = event.target;
 
             if (clickedElem.className === 'readMoreButton') {
-                let countyID = (new URL(document.location)).searchParams.get('lanid');
                 newController.delayReload();
                 newController.addToUrl(`?annonsid=${clickedElem.id}&lanid=${countyID}`);
             }
@@ -373,7 +373,7 @@ class DOM {
     }
 
     displayListed(latestJobs) {
-        
+
         const outputListJobs = document.getElementById('outputListJobs');
 
         if (latestJobs.matchningslista.antal_platsannonser) {
@@ -384,7 +384,7 @@ class DOM {
             let listedJobs = '';
             outputListJobs.innerHTML = '';
             const jobDataLength = jobData.length;
-  
+
             for (let i = 0; i < jobDataLength; i++) {
 
                 const date = jobData[i].sista_ansokningsdag;
