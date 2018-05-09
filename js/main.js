@@ -3,9 +3,7 @@ class Init {
         newController.checkUrlEnding();
         //Initializing of search functionality 
         newController.filterByOptions();
-        newController.search();
         newController.searchField();
-        newController.disableEnter();
         newController.shareSearchResult();
         newController.savedAdsButtonEventlistener();
         //Fetching values for options in filter.
@@ -117,21 +115,25 @@ class Controller {
                     .then(newDOM.displayAutoComplete);
             }
         });
-    }
-    
-    search() {
-        this.searchFieldElements(); 
-        console.log(searchFieldInput)
-        console.log(searchFieldButton)
-        searchFieldButton.addEventListener('click', function(){
+        
+        searchFieldButton.addEventListener('click', () => {
             if(searchFieldInput.value){
-                //laga kommuner om när inte lanid är sagt.
                 newController.delayReload();
                 newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${searchFieldInput.value}`)
             }
-        })
-        //newController.delayReload();
-        //newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${this.id}`);
+        })  
+        
+        searchFieldInput.addEventListener('keydown', (event) => {
+            if (event.keyCode === 13) {
+                event.preventDefault(); 
+                if (searchFieldInput.value.length > 2) {
+                    /* Enables enter but still need the preventDefault to prevent
+                       user from sending bad values in to the url */
+                    newController.delayReload();
+                    newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${searchFieldInput.value}`)
+                }  
+            }
+        })   
     }
 
     autoCompleteSearch() {
