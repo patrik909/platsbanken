@@ -115,12 +115,14 @@ class Controller {
                     .then(newDOM.displayAutoComplete);
             }
         });
+        
         searchFieldButton.addEventListener('click', () => {
             if(searchFieldInput.value){
                 newController.delayReload();
                 newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${searchFieldInput.value}`)
             }
-        })    
+        })  
+        
         searchFieldInput.addEventListener('keydown', (event) => {
             if (event.keyCode === 13) {
                 event.preventDefault(); 
