@@ -176,12 +176,14 @@ class Controller {
     
     clearLocalStorageButtonEventlistener() {
         document.addEventListener('click', function (event) {
-            var clickedElem = event.target;
+            let clickedElem = event.target;
             
             if (clickedElem.id !== 'clearButton') {
                 return;
             } else {
                 localStorage.removeItem('savedJobsList');
+                let outputSavedJobs = document.getElementById('outputSavedJobs');
+                outputSavedJobs.innerText = "Annonserna är borttagna!";
             }
         }, false);
     } 
