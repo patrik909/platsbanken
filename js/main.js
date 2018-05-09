@@ -3,7 +3,9 @@ class Init {
         newController.checkUrlEnding();
         //Initializing of search functionality 
         newController.filterByOptions();
+        newController.search();
         newController.searchField();
+        newController.disableEnter();
         newController.shareSearchResult();
         newController.savedAdsButtonEventlistener();
         //Fetching values for options in filter.
@@ -14,7 +16,10 @@ class Init {
             .then(newController.countyDropdownEventlistener);
 
         let countyID = (new URL(document.location)).searchParams.get('lanid');
-
+        if(!countyID){
+            // Sets default value for town options, if there is no 'lanid' info in url.
+            countyID = 10
+        }
         newFetch.fetchList(`/platsannonser/soklista/kommuner?lanid=${countyID}`)
             .then(newDOM.displayFilterOptions);
     }
@@ -41,7 +46,16 @@ class Controller {
         }
         return formatedDate;
     }
-
+    
+    disableEnter() {
+        this.searchFieldElements();
+        searchFieldInput.addEventListener('keydown', function(event){
+            if(event.keyCode === 13){
+                event.preventDefault();
+            }
+        })    
+    }
+    
     checkUrlEnding() {
         // Separates url from query parameters
         const urlSeparator = '?';
@@ -87,6 +101,7 @@ class Controller {
 
     searchFieldElements() {
         const searchFieldInput = document.getElementById('searchFieldInput');
+        const searchFieldButton = document.getElementById('searchFieldButton');
         const autoCompleteOutput = document.getElementById('autoCompleteOutput');
     }
 
@@ -102,6 +117,21 @@ class Controller {
                     .then(newDOM.displayAutoComplete);
             }
         });
+    }
+    
+    search() {
+        this.searchFieldElements(); 
+        console.log(searchFieldInput)
+        console.log(searchFieldButton)
+        searchFieldButton.addEventListener('click', function(){
+            if(searchFieldInput.value){
+                //laga kommuner om när inte lanid är sagt.
+                newController.delayReload();
+                newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${searchFieldInput.value}`)
+            }
+        })
+        //newController.delayReload();
+        //newController.addToUrl(`?sida=1&antalrader=10&nyckelord=${this.id}`);
     }
 
     autoCompleteSearch() {
@@ -121,8 +151,8 @@ class Controller {
     }
 
     paginationButtons(totalPageNumbers) {
-        const currentPageNumber = (new URL(document.location)).searchParams.get("sida");
-        const firstIndexOfUrlEnding = url.indexOf("antalrader") + 11;
+        const currentPageNumber = (new URL(document.location)).searchParams.get('sida');
+        const firstIndexOfUrlEnding = url.indexOf('antalrader') + 11;
         const lastIndexOfUrlEnding = url.length;
         const urlEnding = url.substring(firstIndexOfUrlEnding, lastIndexOfUrlEnding);
 
@@ -182,7 +212,7 @@ class Controller {
             } else {
                 localStorage.removeItem('savedJobsList');
                 let outputSavedJobs = document.getElementById('outputSavedJobs');
-                outputSavedJobs.innerText = "Annonserna är borttagna!";
+                outputSavedJobs.innerText = 'Annonserna är borttagna!';
             }
         }, false);
     } 
@@ -306,7 +336,7 @@ class DOM {
             let countyID = (new URL(document.location)).searchParams.get('lanid');
 
             for (let i = 0; i < townButton.length; i++) {
-                if(townButton[i].value === countyID){
+                if (townButton[i].value === countyID) {
                     townButton[i].setAttribute('selected', 'selected')
                 }
             } 
@@ -342,9 +372,7 @@ class DOM {
         }
     }
 
-    
     displayListed(latestJobs) {
-
         
         const outputListJobs = document.getElementById('outputListJobs');
 
@@ -356,10 +384,7 @@ class DOM {
             let listedJobs = '';
             outputListJobs.innerHTML = '';
             const jobDataLength = jobData.length;
-            
-           
-
-
+  
             for (let i = 0; i < jobDataLength; i++) {
 
                 const date = jobData[i].sista_ansokningsdag;
@@ -412,8 +437,8 @@ class DOM {
 		}
         
         let clearSavedAdsButton = document.createElement('button');
-        clearSavedAdsButton.setAttribute("id", "clearButton");
-        let textnode = document.createTextNode("Ta bort mina sparade annonser"); 
+        clearSavedAdsButton.setAttribute('id', 'clearButton');
+        let textnode = document.createTextNode('Ta bort mina sparade annonser'); 
         clearSavedAdsButton.appendChild(textnode); 
         
         outputSavedJobs.appendChild(clearSavedAdsButton);
@@ -421,7 +446,7 @@ class DOM {
 	}
 
     pagination(latestJobs) {    
-        const currentPageNumber = (new URL(document.location)).searchParams.get("sida");
+        const currentPageNumber = (new URL(document.location)).searchParams.get('sida');
         const pageNumberDiv = document.getElementById('pageNumber');
         const totalAmountOfPages = latestJobs.matchningslista.antal_sidor;
         

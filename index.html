@@ -2,22 +2,24 @@
 <html lang="sv">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Platsbanken</title>
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,900" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-
 </head>
-
 <body>
-    <header><h1><a href="index.html">PLATSBANKEN</a></h1></header>
-    <main>
+    <header>
+        <h1>
+            <a href="index.html">
+                PLATSBANKEN
+            </a>
+        </h1>
+    </header>
+    <main>  
        
         <form id="searchForm">
-            <div id="upperForm">
-               
+            <div id="upperForm">  
                 <select id="filterProfession"></select>
                 <select id="filterCounty"></select>
                 <select id="filterTown"></select>
@@ -25,32 +27,35 @@
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
-                </select>
-                
+                </select>    
                 <button type="button" id="filterButton">
                     Filtrera
                 </button>
-                
             </div>
             <div id="lowerForm">
-            
                 <input type="text" id="searchFieldInput" autocomplete="off">
                 <button type="button" id="searchFieldButton">
                     <img src="images/search.svg" alt="Magnifying glass">
                 </button>
             </div> 
             <div id="autoCompleteOutput"></div> 
-        </form>
-        
+        </form>  
+         
         <div id="amountOfJobs"></div>
         <div id="filterByTown"></div>
+        
         <div id="outputListJobs">
             <div id="outputJobURL"></div>
         </div>
+        
         <div id="pagineringWrapper">
-            <button id="previousPage"><img src="images/left.svg" alt="Arrow pointing left"></button>
+            <button id="previousPage">
+                <img src="images/left.svg" alt="Arrow pointing left">
+            </button>
             <div id="pageNumber"></div>
-            <button id="nextPage"><img src="images/right.svg" alt="Arrow pointing right"></button>
+            <button id="nextPage">
+                <img src="images/right.svg" alt="Arrow pointing right">
+            </button>
         </div>
         
         <button id="shareSearchResultButton">
@@ -70,10 +75,7 @@
         </div>
         
     </main>
-    <footer></footer>
-    
     <script src="js/main.js"></script>
-    
 </body>
 
 </html>
