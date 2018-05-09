@@ -303,3 +303,8 @@ main{
 #savedAds:hover{
     background: #0049c1; 
 }
+
+.singleJobText{
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
