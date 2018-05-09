@@ -435,7 +435,7 @@ class DOM {
                 <h2>${singleJobDetails.annonsrubrik}</h2>
                 <p><strong>${singleJobDetails.yrkesbenamning}</strong> - ${singleJobDetails.kommunnamn}</p>
                 <p><strong>Antal platser:</strong> ${singleJobDetails.antal_platser} </p>
-                <p>${singleJobDetails.annonstext}</p>
+                <p class="singleJobText">${singleJobDetails.annonstext}</p>
                 <p>${workplaceDetails.arbetsplatsnamn}</p>
 
                 <h3>Villkor</h3>
