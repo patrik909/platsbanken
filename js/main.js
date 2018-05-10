@@ -449,6 +449,8 @@ class DOM {
     }
 
     displaySingleJobPost(jobDetails) {
+        let pagineringWrapper = document.getElementById('pagineringWrapper');
+        pagineringWrapper.style.visibility = 'hidden';
         const singleJobDetails = jobDetails.platsannons.annons;
         const applicationDetails = jobDetails.platsannons.ansokan;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
