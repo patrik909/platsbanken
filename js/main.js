@@ -234,6 +234,21 @@ class Controller {
             }
         }, false);
     }
+    
+    singleJobEventlistners() {
+                const backButton = document.getElementById('backButton');
+		backButton.addEventListener('click', () => {
+            const previousUrl = localStorage.getItem('previousUrl');
+            document.location.assign(previousUrl);
+            localStorage.removeItem('previousUrl');
+        });
+        
+        const saveAdButton = document.getElementById('saveAdButton');
+        saveAdButton.addEventListener('click', function() {
+            newSave.saveAdToBrowser(this.dataset.id);
+            newDOM.displaySaveMessage();
+        });
+    }
 }
 
 class Save {
@@ -323,22 +338,25 @@ class DOM {
 
         if (optionsToList === 'yrkesomraden') {
             optionOutput = document.getElementById('filterProfession');
-            optionOutput.innerHTML = options;
+            optionOutput.innerHTML = options; 
         } else if (optionsToList === 'lan') {
             optionOutput = document.getElementById('filterCounty');
             optionOutput.innerHTML = options;
             
             const townButton = document.getElementsByClassName('townItem');
-            let countyID = (new URL(document.location)).searchParams.get('lanid');
+            let countyID = (new URL(document.location)).searchParams.get('lanid'); 
+        } else {
+            optionOutput = document.getElementById('filterTown');
+            optionOutput.innerHTML = '<option class="townItem" value="0">Hela länet</option>' + options;
+
+            const townButton = document.getElementsByClassName('townItem');
+            let countyID = (new URL(document.location)).searchParams.get('kommunid');
 
             for (let i = 0; i < townButton.length; i++) {
                 if (townButton[i].value === countyID) {
                     townButton[i].setAttribute('selected', 'selected')
                 }
             } 
-        } else {
-            optionOutput = document.getElementById('filterTown');
-            optionOutput.innerHTML = '<option class="townItem" value="0">Hela länet</option>' + options;
         }
     }
 
@@ -480,19 +498,7 @@ class DOM {
                 <p><a href="${applicationDetails.webbplats}">Ansök här</a></p>
             </div>
         `;
-
-        const backButton = document.getElementById('backButton');
-		backButton.addEventListener('click', () => {
-            const previousUrl = localStorage.getItem('previousUrl');
-            document.location.assign(previousUrl);
-            localStorage.removeItem('previousUrl');
-        });
-        
-        const saveAdButton = document.getElementById('saveAdButton');
-        saveAdButton.addEventListener('click', function() {
-            newSave.saveAdToBrowser(this.dataset.id);
-            newDOM.displaySaveMessage();
-        });
+        newController.singleJobEventlistners();
     }
 
     displayUrl() {
