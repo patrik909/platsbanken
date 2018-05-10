@@ -448,8 +448,8 @@ class DOM {
     }
 
     displaySingleJobPost(jobDetails) {
-        let element = document.getElementById('pagineringWrapper');
-        element.classList.toggle('hidden');
+        let pagineringWrapper = document.getElementById('pagineringWrapper');
+        pagineringWrapper.style.visibility = 'hidden';
         const singleJobDetails = jobDetails.platsannons.annons;
         const applicationDetails = jobDetails.platsannons.ansokan;
         const workplaceDetails = jobDetails.platsannons.arbetsplats;
