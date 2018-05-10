@@ -202,7 +202,9 @@ class Controller {
         outputListJobs.addEventListener('click', function (event) {
             let clickedElem = event.target;
 
-            if (clickedElem.className === 'readMoreButton') {
+            if (clickedElem.className !== 'readMoreButton') {
+                return;
+            } else {
                 newController.delayReload();
                 newController.addToUrl(`?annonsid=${clickedElem.id}&lanid=${countyID}`);
             }
