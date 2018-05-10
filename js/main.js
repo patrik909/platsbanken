@@ -336,22 +336,25 @@ class DOM {
 
         if (optionsToList === 'yrkesomraden') {
             optionOutput = document.getElementById('filterProfession');
-            optionOutput.innerHTML = options;
+            optionOutput.innerHTML = options; 
         } else if (optionsToList === 'lan') {
             optionOutput = document.getElementById('filterCounty');
             optionOutput.innerHTML = options;
             
             const townButton = document.getElementsByClassName('townItem');
-            let countyID = (new URL(document.location)).searchParams.get('lanid');
+            let countyID = (new URL(document.location)).searchParams.get('lanid'); 
+        } else {
+            optionOutput = document.getElementById('filterTown');
+            optionOutput.innerHTML = '<option class="townItem" value="0">Hela länet</option>' + options;
+
+            const townButton = document.getElementsByClassName('townItem');
+            let countyID = (new URL(document.location)).searchParams.get('kommunid');
 
             for (let i = 0; i < townButton.length; i++) {
                 if (townButton[i].value === countyID) {
                     townButton[i].setAttribute('selected', 'selected')
                 }
             } 
-        } else {
-            optionOutput = document.getElementById('filterTown');
-            optionOutput.innerHTML = '<option class="townItem" value="0">Hela länet</option>' + options;
         }
     }
 
