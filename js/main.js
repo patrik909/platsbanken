@@ -232,6 +232,21 @@ class Controller {
             }
         }, false);
     }
+    
+    singleJobEventlistners() {
+                const backButton = document.getElementById('backButton');
+		backButton.addEventListener('click', () => {
+            const previousUrl = localStorage.getItem('previousUrl');
+            document.location.assign(previousUrl);
+            localStorage.removeItem('previousUrl');
+        });
+        
+        const saveAdButton = document.getElementById('saveAdButton');
+        saveAdButton.addEventListener('click', function() {
+            newSave.saveAdToBrowser(this.dataset.id);
+            newDOM.displaySaveMessage();
+        });
+    }
 }
 
 class Save {
@@ -478,19 +493,7 @@ class DOM {
                 <p><a href="${applicationDetails.webbplats}">Ansök här</a></p>
             </div>
         `;
-
-        const backButton = document.getElementById('backButton');
-		backButton.addEventListener('click', () => {
-            const previousUrl = localStorage.getItem('previousUrl');
-            document.location.assign(previousUrl);
-            localStorage.removeItem('previousUrl');
-        });
-        
-        const saveAdButton = document.getElementById('saveAdButton');
-        saveAdButton.addEventListener('click', function() {
-            newSave.saveAdToBrowser(this.dataset.id);
-            newDOM.displaySaveMessage();
-        });
+        newController.singleJobEventlistners();
     }
 
     displayUrl() {
