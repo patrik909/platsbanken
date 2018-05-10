@@ -3,7 +3,7 @@ class Init {
         newController.checkUrlEnding();
         //Initializing of search functionality 
         newController.filterByOptions();
-        newController.searchField();
+        newController.searchFieldEventlisteners();
         newController.shareSearchResult();
         newController.savedAdsButtonEventlistener();
         //Fetching values for options in filter.
@@ -94,7 +94,7 @@ class Controller {
         const autoCompleteOutput = document.getElementById('autoCompleteOutput');
     }
 
-    searchField() {
+    searchFieldEventlisteners() {
         this.searchFieldElements();
 
         searchFieldInput.addEventListener('keyup', () => {
