@@ -6,6 +6,7 @@ class Init {
         newController.searchFieldEventlisteners();
         newController.shareSearchResult();
         newController.savedAdsButtonEventlistener();
+        newController.closeErrorMessage();
         //Fetching values for options in filter.
         newFetch.fetchList(`/platsannonser/soklista/yrkesomraden`)
             .then(newDOM.displayFilterOptions);
@@ -249,6 +250,28 @@ class Controller {
             newDOM.displaySaveMessage();
         });
     }
+
+
+
+
+	closeErrorMessage() {
+        const outputErrorMessage = document.getElementById('outputErrorMessage');
+
+        outputErrorMessage.addEventListener('click', (event) => {
+            let clickedElem = event.target;
+            
+            if (clickedElem.id !== 'close') {
+                return;
+            } else {
+                
+               if (clickedElem.id === 'close'){
+                   outputErrorMessage.style.display = 'none';
+               }
+                
+            }
+        }, false);
+        
+     }
 }
 
 class Save {
@@ -287,12 +310,6 @@ class Fetch {
             for (let adUrl of saveAds) {
                 fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adUrl}`)
                 .then((response) => {
-                    if (!response.ok) {
-                        throw Error(response.status);
-                    }
-                    return response;
-                })
-                .then((response) => {
                     return response.json();
                 })
                 .then((job) => {
@@ -300,7 +317,7 @@ class Fetch {
                     newDOM.displaySavedAds(jobArray)
                 })
                 .catch((error) => {
-                    newDOM.displayErrorMessage(error);
+                    newDOM.displayError404Message(error);
                 });
             }
         }
@@ -514,6 +531,21 @@ class DOM {
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Hoppsan! Något gick fel</h3>
             <p>Det verkar som vi inte får kontakt med servern. Testa att ladda om sidan.</p>
+            <div id="close">&times</div>
+        `;
+        errorMessagePopupBackground.style.display = 'flex';
+        outputErrorMessage.style.display = 'block';
+
+        newController.closePopup();
+    }
+    
+    displayError404Message(error) {
+        const outputErrorMessage = document.getElementById('outputErrorMessage');
+        const errorMessagePopupBackground = document.getElementById('errorMessagePopupBackground')
+        outputErrorMessage.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Hoppsan! Någon annons har tagits bort av arbetsgivaren</h3>
+            <div id="close">&times</div>
         `;
         errorMessagePopupBackground.style.display = 'flex';
         outputErrorMessage.style.display = 'block';
