@@ -1,32 +1,37 @@
 {
-  "name": "platsbanken",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "cucumber-js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/patrik909/platsbanken.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/patrik909/platsbanken/issues"
-  },
-  "homepage": "https://github.com/patrik909/platsbanken#readme",
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "chromedriver": "^2.38.2",
-    "cucumber": "^4.2.1",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "selenium-webdriver": "^4.0.0-alpha.1"
-  }
+	"name": "platsbanken",
+	"version": "1.0.0",
+	"description": "This is a project from Front End Developer students Helena Edblad, Patrik Eriksson, Omi Gibba, Mariia Loskutova, Emmelie Engström and Monica Gomez.",
+	"main": "index.js",
+	"scripts": {
+		"test": "cucumber-js",
+		"build": "babel js -d lib"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/patrik909/platsbanken.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/patrik909/platsbanken/issues"
+	},
+	"homepage": "https://github.com/patrik909/platsbanken#readme",
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-es2015": "^6.24.1",
+		"chai": "^4.1.2",
+		"chromedriver": "^2.38.2",
+		"cucumber": "^4.2.1",
+		"eslint": "^4.19.1",
+		"eslint-config-airbnb-base": "^12.1.0",
+		"eslint-config-standard": "^11.0.0",
+		"eslint-plugin-import": "^2.11.0",
+		"eslint-plugin-node": "^6.0.1",
+		"eslint-plugin-promise": "^3.7.0",
+		"eslint-plugin-standard": "^3.0.1",
+		"selenium-webdriver": "^4.0.0-alpha.1"
+	}
 }
