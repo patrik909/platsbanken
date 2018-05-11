@@ -30,7 +30,7 @@ class Controller {
     
     // Delays reloading needed for the application to work in Firefox and Safari
     delayReload() {
-        setTimeout(function(){
+        setTimeout( () => {
           window.location.reload();
         }, 500);
     }
@@ -168,8 +168,8 @@ class Controller {
         });
     }
 
-    closePopup(){
-        window.onclick = function(event) {
+    closePopup() {
+        window.onclick = (event) => {
             if (event.target === savedJobsPopupBackground || event.target === sharePopupBackground || event.target === errorMessagePopupBackground) {
                 savedJobsPopupBackground.style.display = 'none';
                 sharePopupBackground.style.display = 'none';
@@ -198,7 +198,7 @@ class Controller {
 	}
     
     clearLocalStorageButtonEventlistener() {
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', (event) => {
             let clickedElem = event.target;
             
             if (clickedElem.id !== 'clearButton') {
@@ -223,7 +223,7 @@ class Controller {
     showSingleJobEventListener() {
         const outputListJobs = document.getElementById('outputListJobs');
         let countyID = (new URL(document.location)).searchParams.get('lanid');
-        outputListJobs.addEventListener('click', function (event) {
+        outputListJobs.addEventListener('click', (event) => {
             let clickedElem = event.target;
 
             if (clickedElem.className !== 'readMoreButton') {
@@ -439,7 +439,7 @@ class DOM {
 			outputSavedJobs.appendChild(savedAdsList);
 
 			let savedAdButton = document.getElementById(`savedAd${saveAd.annonsid}`);
-			savedAdButton.addEventListener('click', function () {
+			savedAdButton.addEventListener('click', () => {
                 newController.delayReload();
                 newController.addToUrl(`?annonsid=${saveAd.annonsid}`);
 			});
